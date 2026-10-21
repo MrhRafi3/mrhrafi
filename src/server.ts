@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { PortfolioService } from './services/portfolioService.js';
@@ -16,9 +17,24 @@ export function createApp(portfolioService?: PortfolioService) {
 
   app.use(express.json());
 
-  // Static assets
-  const publicDir = path.resolve(__dirname, '../public');
+  // Static assets - search known paths for public dir (local dist, local src, or vercel lambda)
+  const candidatePublicDirs = [
+    path.resolve(__dirname, '../public'),
+    path.resolve(process.cwd(), 'public'),
+    path.resolve(__dirname, '../../public'),
+  ];
+  const publicDir = candidatePublicDirs.find((dir) => fs.existsSync(dir)) || candidatePublicDirs[0];
   app.use(express.static(publicDir));
+
+  // Explicit root handler to serve index.html if request reaches Express
+  app.get('/', (_req: Request, res: Response, next: NextFunction) => {
+    const indexPath = path.join(publicDir, 'index.html');
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      next();
+    }
+  });
 
   // Health check endpoint
   app.get('/api/health', (_req: Request, res: Response) => {
