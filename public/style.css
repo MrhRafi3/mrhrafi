@@ -78,6 +78,47 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   border-radius: var(--radius-pill);
   padding: 8px 8px 8px 24px;
   border: 1px solid rgba(255,255,255,0.2);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.navbar[data-scrolled] .nav-inner {
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+}
+/* Section-aware light theme (over white and yellow sections) */
+.navbar[data-theme="light"] .nav-inner {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+}
+.navbar[data-theme="light"] .nav-logo {
+  color: var(--blue-dark);
+}
+.navbar[data-theme="light"] .nav-logo-accent {
+  color: var(--blue);
+}
+.navbar[data-theme="light"] .nav-pills {
+  background: rgba(0, 0, 0, 0.05);
+}
+.navbar[data-theme="light"] .nav-pill {
+  color: var(--gray-700);
+}
+.navbar[data-theme="light"] .nav-pill:hover {
+  color: var(--blue);
+  background: rgba(46, 12, 255, 0.08);
+}
+.navbar[data-theme="light"] .nav-pill.active {
+  background: var(--blue);
+  color: var(--white);
+}
+.navbar[data-theme="light"] .nav-cta-btn {
+  background: var(--blue);
+  color: var(--white);
+}
+.navbar[data-theme="light"] .nav-cta-btn:hover {
+  background: var(--yellow);
+  color: var(--blue-dark);
+}
+.navbar[data-theme="light"] .nav-hamburger span {
+  background: var(--gray-900);
 }
 .nav-logo {
   font-family: var(--font-body);
@@ -207,7 +248,12 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
 
 /* ======================== HERO ======================== */
 .hero {
-  background: var(--blue);
+  background-color: var(--blue);
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 52px 52px;
+  background-position: center center;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -349,9 +395,14 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
 
 /* ======================== TICKER ======================== */
 .ticker-section {
+  position: relative;
+  z-index: 5;
   background: var(--yellow);
-  padding: 40px 0;
+  padding: 48px 0;
   overflow: hidden;
+  border-radius: 40px 40px 0 0;
+  margin-top: -36px;
+  box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.12);
 }
 .ticker-heading {
   text-align: center;
@@ -416,8 +467,13 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
 
 /* ======================== ABOUT ======================== */
 .about-section {
+  position: relative;
+  z-index: 6;
   padding: 120px 0;
   background: var(--white);
+  border-radius: 40px 40px 0 0;
+  margin-top: -32px;
+  box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.04);
 }
 .about-grid {
   display: grid;
@@ -674,9 +730,13 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
 /* ======================== PROJECTS (PINNED HORIZONTAL GALLERY) ======================== */
 .projects-pin-section {
   position: relative;
+  z-index: 7;
   width: 100%;
   background: var(--off-white);
-  min-height: 260vh;
+  min-height: 200vh;
+  border-radius: 40px 40px 0 0;
+  margin-top: -32px;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.04);
 }
 .projects-sticky-viewport {
   position: sticky;
@@ -707,6 +767,63 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   margin-bottom: 16px;
   flex-wrap: wrap;
   gap: 16px;
+}
+.projects-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.projects-step-counter {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--gray-700);
+  background: var(--white);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  user-select: none;
+}
+.step-num {
+  color: var(--blue);
+}
+.step-sep {
+  color: var(--gray-300);
+  margin: 0 4px;
+}
+.projects-nav-arrows {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.carousel-arrow-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: var(--gray-900);
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.carousel-arrow-btn:hover:not([aria-disabled="true"]) {
+  background: var(--blue);
+  color: var(--white);
+  border-color: var(--blue);
+  transform: translateY(-1px);
+}
+.carousel-arrow-btn[aria-disabled="true"] {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 .projects-scroll-indicator {
   display: inline-flex;
@@ -794,7 +911,11 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   will-change: transform;
   width: max-content;
   padding-right: 120px; /* guarantees end card breathes completely before unpin */
-  transition: transform 0.04s linear;
+  /* Remove transition during active scroll to prevent RAF fighting */
+  transition: none;
+}
+.projects-track.is-settling {
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .project-card {
@@ -1360,8 +1481,13 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
 
 /* ======================== PROCESS ======================== */
 .process-section {
+  position: relative;
+  z-index: 8;
   padding: 120px 0;
   background: var(--white);
+  border-radius: 40px 40px 0 0;
+  margin-top: -32px;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.04);
 }
 .process-steps {
   display: grid;
@@ -1501,11 +1627,19 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
 
 /* ======================== FINAL CTA ======================== */
 .final-cta-section {
-  padding: 160px 0;
-  background: var(--blue);
-  text-align: center;
   position: relative;
+  z-index: 9;
+  padding: 160px 0;
+  background-color: var(--blue);
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 52px 52px;
+  text-align: center;
   overflow: hidden;
+  border-radius: 40px 40px 0 0;
+  margin-top: -32px;
+  box-shadow: 0 -16px 40px rgba(0, 0, 0, 0.18);
 }
 .final-cta-section::before {
   content: '';
@@ -1656,9 +1790,46 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
 
 /* ======================== FOOTER ======================== */
 .footer {
+  position: relative;
+  z-index: 10;
   background: var(--gray-900);
   color: var(--white);
   padding: 80px 0 40px;
+  border-radius: 40px 40px 0 0;
+  margin-top: -32px;
+  box-shadow: 0 -16px 40px rgba(0, 0, 0, 0.35);
+}
+.footer-hero-talk {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 48px;
+  margin-bottom: 48px;
+  overflow: hidden;
+}
+.footer-huge-link {
+  display: block;
+  text-decoration: none;
+}
+.footer-talk-text {
+  font-family: var(--font-headline);
+  font-size: clamp(4.5rem, 14vw, 11.5rem);
+  line-height: 0.9;
+  letter-spacing: -2px;
+  color: var(--white);
+  transition: color 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.footer-talk-arrow {
+  color: var(--yellow);
+  transition: transform 0.3s ease;
+}
+.footer-huge-link:hover .footer-talk-text {
+  color: var(--yellow);
+  transform: translateX(12px);
+}
+.footer-huge-link:hover .footer-talk-arrow {
+  transform: translate(8px, -8px);
 }
 .footer-grid {
   display: grid;
@@ -1715,6 +1886,136 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
 .reveal-on-scroll.is-revealed {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Split-word typography entrance */
+.split-w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  line-height: 1.15;
+}
+.split-wi {
+  display: inline-block;
+  transform: translateY(115%);
+  opacity: 0;
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+  transition-delay: calc(var(--i, 0) * 0.04s);
+  will-change: transform, opacity;
+}
+.is-revealed .split-wi,
+.hero-content .split-wi {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Interactive Physics Sandbox */
+.skills-physics-card {
+  position: relative;
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  margin-top: 24px;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+}
+.skills-physics-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--yellow);
+  color: var(--blue-dark);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-handwritten);
+  font-size: 1.25rem;
+  font-weight: 700;
+  align-self: flex-start;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 12px rgba(255, 208, 0, 0.35);
+  user-select: none;
+}
+.skills-physics-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue-dark);
+  animation: indicator-pulse 1.5s infinite ease-in-out;
+}
+.skills-physics-canvas {
+  width: 100%;
+  height: 320px;
+  display: block;
+  cursor: grab;
+  touch-action: none;
+}
+.skills-physics-canvas:active {
+  cursor: grabbing;
+}
+.skills-physics-card.has-canvas .tags-cloud {
+  display: none;
+}
+
+/* Magnetic Talk Cursor */
+.talk-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s linear, visibility 0.25s linear;
+  will-change: transform;
+}
+.talk-cursor.is-on {
+  opacity: 1;
+  visibility: visible;
+}
+.talk-cursor__disc {
+  position: absolute;
+  top: -5.5rem;
+  left: -5.5rem;
+  width: 11rem;
+  height: 11rem;
+  border-radius: 50%;
+  background: var(--yellow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  transform: scale(0.6) rotate(-25deg);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.talk-cursor.is-on .talk-cursor__disc {
+  transform: scale(1) rotate(0deg);
+}
+.talk-cursor.is-down .talk-cursor__disc {
+  transform: scale(0.88);
+}
+.talk-cursor__arrow {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--blue-dark);
+  line-height: 1;
+}
+.talk-cursor__text {
+  font-family: var(--font-headline);
+  font-size: 1.15rem;
+  letter-spacing: 1.5px;
+  color: var(--blue-dark);
+  font-weight: 800;
+}
+@media (hover: none) or (pointer: coarse) {
+  .talk-cursor {
+    display: none !important;
+  }
 }
 
 /* Hero Entrance Animations */

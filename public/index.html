@@ -58,10 +58,10 @@
 
   <main id="main-content">
     <!-- ======================== HERO ======================== -->
-    <section class="hero">
+    <section class="hero" data-ground="blue">
       <div class="hero-container">
         <div class="hero-content">
-          <h1 class="hero-headline">
+          <h1 class="hero-headline" data-split>
             MOBILE APPS<br />
             THAT SHIP &amp;<br />
             <span class="hero-headline-accent">PERFORM</span>
@@ -97,7 +97,7 @@
     </section>
 
     <!-- ======================== TECH STACK TICKER ======================== -->
-    <section class="ticker-section">
+    <section class="ticker-section" data-ground="yellow">
       <h2 class="ticker-heading">Technologies I work with</h2>
       <div class="ticker-track-wrapper">
         <div class="ticker-track" id="ticker-track">
@@ -133,12 +133,12 @@
     </section>
 
     <!-- ======================== ABOUT + STATS ======================== -->
-    <section class="about-section reveal-on-scroll" id="about">
+    <section class="about-section reveal-on-scroll" id="about" data-ground="white">
       <div class="container">
         <div class="about-grid">
           <div class="about-content">
             <span class="section-label">a bit about me</span>
-            <h2 class="section-heading">Flutter Developer,<br/>Dhaka, Bangladesh</h2>
+            <h2 class="section-heading" data-split>Flutter Developer,<br/>Dhaka, Bangladesh</h2>
             <p class="about-text">
               I specialize in building cross-platform mobile applications with Flutter and Dart, translating product ideas into responsive, tactile interfaces that feel natural on every screen.
             </p>
@@ -176,10 +176,10 @@
     </section>
 
     <!-- ======================== SKILLS & PILLARS ======================== -->
-    <section class="skills-section reveal-on-scroll" id="skills">
+    <section class="skills-section reveal-on-scroll" id="skills" data-ground="white">
       <div class="container">
         <span class="section-label">technical proficiency</span>
-        <h2 class="section-heading">Core Stack &amp; Foundations</h2>
+        <h2 class="section-heading" data-split>Core Stack &amp; Foundations</h2>
         <p class="section-subtext">
           Three pillars guiding my engineering: mobile interface craft, foundational computer science logic, and modern architecture workflows.
         </p>
@@ -233,10 +233,10 @@
     </section>
 
     <!-- ======================== SERVICES ======================== -->
-    <section class="services-section reveal-on-scroll" id="services">
+    <section class="services-section reveal-on-scroll" id="services" data-ground="white">
       <div class="container">
         <span class="section-label">what I build</span>
-        <h2 class="section-heading">How I can help</h2>
+        <h2 class="section-heading" data-split>How I can help</h2>
         <p class="section-subtext">
           Dedicated mobile development services from initial UI architecture to production-ready app release.
         </p>
@@ -285,43 +285,62 @@
       </div>
     </section>
 
-    <!-- ======================== FEATURE TAGS ======================== -->
-    <section class="tags-section reveal-on-scroll">
+    <!-- ======================== FEATURE TAGS / INTERACTIVE PHYSICS ======================== -->
+    <section class="tags-section reveal-on-scroll" data-ground="white" id="tags">
       <div class="container">
-        <h2 class="section-heading">Everything your app needs</h2>
+        <span class="section-label">interactive stack exploration</span>
+        <h2 class="section-heading" data-split>Everything your app needs</h2>
         <p class="section-subtext">Every application is custom-crafted with clean boundaries.</p>
-        <div class="tags-cloud">
-          <span class="feature-tag">Flutter</span>
-          <span class="feature-tag">Dart</span>
-          <span class="feature-tag">Mobile UI / UX</span>
-          <span class="feature-tag">C++</span>
-          <span class="feature-tag">Data Structures &amp; Algorithms</span>
-          <span class="feature-tag">Provider</span>
-          <span class="feature-tag">Riverpod</span>
-          <span class="feature-tag">Clean Architecture</span>
-          <span class="feature-tag">Custom Canvas</span>
-          <span class="feature-tag">SQLite / Sqflite</span>
-          <span class="feature-tag">REST APIs</span>
-          <span class="feature-tag">Git &amp; GitHub</span>
-          <span class="feature-tag">Android &amp; iOS</span>
-          <span class="feature-tag">Touch Ergonomics</span>
+        
+        <div class="skills-physics-card" id="skills-physics-wrap">
+          <div class="skills-physics-badge">
+            <span class="skills-physics-dot"></span> go on, throw them around
+          </div>
+          <canvas class="skills-physics-canvas" id="skills-physics-canvas" aria-label="Interactive skill tag physics sandbox"></canvas>
+          <div class="tags-cloud" id="skills-static-tags">
+            <span class="feature-tag">Flutter</span>
+            <span class="feature-tag">Dart</span>
+            <span class="feature-tag">Mobile UI / UX</span>
+            <span class="feature-tag">C++</span>
+            <span class="feature-tag">Data Structures &amp; Algorithms</span>
+            <span class="feature-tag">Provider</span>
+            <span class="feature-tag">Riverpod</span>
+            <span class="feature-tag">Clean Architecture</span>
+            <span class="feature-tag">Custom Canvas</span>
+            <span class="feature-tag">SQLite / Sqflite</span>
+            <span class="feature-tag">REST APIs</span>
+            <span class="feature-tag">Git &amp; GitHub</span>
+            <span class="feature-tag">Android &amp; iOS</span>
+            <span class="feature-tag">Touch Ergonomics</span>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ======================== PROJECTS (PINNED HORIZONTAL GALLERY) ======================== -->
-    <section class="projects-pin-section" id="projects">
+    <section class="projects-pin-section" id="projects" data-ground="white">
       <div class="projects-sticky-viewport" id="projects-viewport">
         <div class="projects-container">
           <div class="projects-header-row">
             <div>
               <span class="section-label">verified mobile applications</span>
-              <h2 class="section-heading">Featured Projects &amp; Case Studies</h2>
+              <h2 class="section-heading" data-split>Featured Projects &amp; Case Studies</h2>
             </div>
-            <div class="projects-scroll-indicator" id="projects-indicator">
-              <span class="scroll-indicator-dot"></span>
-              <span class="scroll-indicator-text">scroll or drag to explore</span>
-              <span class="scroll-indicator-arrow">➔</span>
+            <div class="projects-header-controls">
+              <div class="projects-step-counter" id="projects-step-counter" aria-live="polite">
+                <span class="step-num" id="step-current">01</span>
+                <span class="step-sep">/</span>
+                <span class="step-total" id="step-total">03</span>
+              </div>
+              <div class="projects-nav-arrows">
+                <button type="button" class="carousel-arrow-btn" id="carousel-prev-btn" aria-label="Previous project" aria-disabled="true">←</button>
+                <button type="button" class="carousel-arrow-btn" id="carousel-next-btn" aria-label="Next project" aria-disabled="false">→</button>
+              </div>
+              <div class="projects-scroll-indicator" id="projects-indicator">
+                <span class="scroll-indicator-dot"></span>
+                <span class="scroll-indicator-text">scroll or drag</span>
+                <span class="scroll-indicator-arrow">➔</span>
+              </div>
             </div>
           </div>
 
@@ -337,7 +356,7 @@
           </div>
 
           <!-- Horizontal Track Window -->
-          <div class="projects-horizontal-window" id="projects-window">
+          <div class="projects-horizontal-window" id="projects-window" role="region" aria-roledescription="carousel" aria-label="Featured Projects">
             <div class="projects-track" id="projects-carousel">
               <!-- Dynamically populated project cards -->
             </div>
@@ -352,10 +371,10 @@
     </section>
 
     <!-- ======================== PROCESS ======================== -->
-    <section class="process-section reveal-on-scroll" id="process">
+    <section class="process-section reveal-on-scroll" id="process" data-ground="white">
       <div class="container">
         <span class="section-label">usually 2 to 4 weeks</span>
-        <h2 class="section-heading">How it works</h2>
+        <h2 class="section-heading" data-split>How it works</h2>
         <p class="section-subtext">
           A clear, collaborative process from start to finish.
           You deal with me at every stage, so nothing gets lost in translation.
@@ -390,10 +409,10 @@
     </section>
 
     <!-- ======================== FAQ ======================== -->
-    <section class="faq-section reveal-on-scroll" id="faq">
+    <section class="faq-section reveal-on-scroll" id="faq" data-ground="white">
       <div class="container">
         <span class="section-label">no such thing as a silly question</span>
-        <h2 class="section-heading">Good questions, straight answers</h2>
+        <h2 class="section-heading" data-split>Good questions, straight answers</h2>
         <div class="faq-list" id="faq-list">
           <div class="faq-item">
             <button class="faq-question" aria-expanded="false">
@@ -454,10 +473,10 @@
     </section>
 
     <!-- ======================== BLOG PREVIEW ======================== -->
-    <section class="blog-section reveal-on-scroll" id="blog">
+    <section class="blog-section reveal-on-scroll" id="blog" data-ground="white">
       <div class="container">
         <span class="section-label">insights &amp; writing</span>
-        <h2 class="section-heading">Latest from the lab</h2>
+        <h2 class="section-heading" data-split>Latest from the lab</h2>
         <div class="blog-grid">
           <a href="#projects" class="blog-card">
             <span class="blog-tag">Flutter</span>
@@ -479,10 +498,10 @@
     </section>
 
     <!-- ======================== FINAL CTA ======================== -->
-    <section class="final-cta-section reveal-on-scroll" id="contact">
+    <section class="final-cta-section reveal-on-scroll" id="contact" data-ground="blue">
       <div class="container">
         <span class="section-label">let's build something</span>
-        <h2 class="final-cta-heading">Have a mobile app<br/>worth building?</h2>
+        <h2 class="final-cta-heading" data-split>Have a mobile app<br/>worth building?</h2>
         <p class="final-cta-text">
           Independent Flutter developer available for select mobile applications,
           clean architecture consulting, and product engineering worldwide.
@@ -540,8 +559,13 @@
   </div>
 
   <!-- ======================== FOOTER ======================== -->
-  <footer class="footer">
+  <footer class="footer" data-ground="ink">
     <div class="container">
+      <div class="footer-hero-talk">
+        <a href="#contact" class="footer-huge-link" aria-label="Let's talk - Jump to contact section">
+          <span class="footer-talk-text">LET'S TALK<span class="footer-talk-arrow"> ↗</span></span>
+        </a>
+      </div>
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="#" class="footer-logo">MRH RAFI<span class="nav-logo-accent">.DEV</span></a>
@@ -577,6 +601,15 @@
     </div>
   </footer>
 
+  <!-- ======================== MAGNETIC TALK CURSOR ======================== -->
+  <div class="talk-cursor" id="talk-cursor" aria-hidden="true">
+    <div class="talk-cursor__disc">
+      <div class="talk-cursor__arrow">↗</div>
+      <span class="talk-cursor__text">LET'S TALK</span>
+    </div>
+  </div>
+
+  <script src="vendor/matter.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
