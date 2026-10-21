@@ -29,6 +29,7 @@ export interface Project {
   overview?: string;
   highlights: string[];
   features?: ProjectFeature[];
+  coverSrc?: string;
   screenshotSrc: string;
   screenshots: ProjectScreenshot[];
   enriched?: {
@@ -118,6 +119,7 @@ export class PortfolioService {
           { name: 'Alarms & Schedules', detail: 'Flexible repeat schedules, customizable sound triggers, and instant toggles', icon: '◉' },
           { name: 'Precision Stopwatch', detail: 'Circular progress ring, recorded lap times, and sub-millisecond precision', icon: '◎' },
         ],
+        coverSrc: '/images/project-covers/clocky-cover.webp',
         screenshotSrc: '/images/clocky/screen-1.png',
         screenshots: [
           {
@@ -174,6 +176,7 @@ export class PortfolioService {
           { name: 'Project Budgets', detail: 'Dedicated budget allocations with spent vs. remaining progress indicators', icon: '▤' },
           { name: 'Visual Reports', detail: 'Savings rate metrics and interactive Income vs Expense donut chart', icon: '✓' },
         ],
+        coverSrc: '/images/project-covers/expify-cover.webp',
         screenshotSrc: '/images/expify/screen-1.png',
         screenshots: [
           {
@@ -245,6 +248,7 @@ export class PortfolioService {
           { name: 'Dish Customizer', detail: 'Portion sizes, add-on toppings, spice levels, and live price recalculation', icon: '✦' },
           { name: 'Cart & Live Tracking', detail: 'Voucher discounts, delivery address checkout, and live courier progress map', icon: '⚡' },
         ],
+        coverSrc: '/images/project-covers/nomnom-cover.webp',
         screenshotSrc: '/images/NomNom/home.png',
         screenshots: [
           {

@@ -81,6 +81,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function getProjectCover(p) {
+    if (p && p.coverSrc) return p.coverSrc;
+    switch (p?.id) {
+      case 'clocky': return '/images/project-covers/clocky-cover.webp';
+      case 'expify-beta': return '/images/project-covers/expify-cover.webp';
+      case 'nomnom': return '/images/project-covers/nomnom-cover.webp';
+      default: return '';
+    }
+  }
+
   // ============================================================
   // 2. Render Projects in Carousel / Horizontal Track
   // ============================================================
@@ -98,50 +108,40 @@ document.addEventListener('DOMContentLoaded', () => {
         const icon = getProjectIcon(p.id);
         const isEnriched = Boolean(p.enriched);
         const hasGithub = Boolean(p.githubUrl);
+        const coverSrc = getProjectCover(p);
 
         return `
-        <article class="project-card" id="project-${escapeHtml(p.id)}" data-id="${escapeHtml(p.id)}">
-          <div class="project-card-image" role="button" tabindex="0" aria-label="Open ${escapeHtml(p.title)} showcase">
+        <article class="project-card project-card--${escapeHtml(p.id)}" id="project-${escapeHtml(p.id)}" data-id="${escapeHtml(p.id)}">
+          <div class="project-card-cover" role="button" tabindex="0" aria-label="Open ${escapeHtml(p.title)} showcase">
             ${
-              p.screenshotSrc
-                ? `<img src="${escapeHtml(p.screenshotSrc)}" alt="${escapeHtml(p.title)} preview" class="card-thumb-img" loading="lazy" onerror="this.style.display='none'" />`
-                : ''
+              coverSrc
+                ? `<img src="${escapeHtml(coverSrc)}" alt="${escapeHtml(p.title)} cover" class="card-cover-img" loading="lazy" onerror="this.style.display='none'; if (this.nextElementSibling) this.nextElementSibling.classList.remove('hidden'); console.warn('Missing project cover image: ' + this.src);" />
+                   <div class="card-cover-placeholder hidden">
+                     <span class="card-cover-placeholder-icon">🖼️</span>
+                     <span class="card-cover-placeholder-title">${escapeHtml(p.title)}</span>
+                     <span class="card-cover-placeholder-path">${escapeHtml(coverSrc)}</span>
+                   </div>`
+                : `<div class="card-cover-placeholder">
+                     <span class="card-cover-placeholder-icon">🖼️</span>
+                     <span class="card-cover-placeholder-title">${escapeHtml(p.title)}</span>
+                     <span class="card-cover-placeholder-path">Cover image not configured</span>
+                   </div>`
             }
+            <div class="card-cover-gloss"></div>
             <span class="project-card-category">${escapeHtml(category)}</span>
             ${p.badge ? `<span class="project-card-badge">${escapeHtml(p.badge)}</span>` : ''}
-            <div class="project-card-icon-overlay">${icon}</div>
           </div>
 
           <div class="project-card-body">
-            <div class="project-card-header-line">
-              <h3 class="project-card-title">${escapeHtml(p.enriched?.resolvedTitle || p.title)}${p.accent ? `<span class="accent-dot">${escapeHtml(p.accent)}</span>` : ''}</h3>
+            <div class="project-card-title-row">
+              <h3 class="project-card-title">${escapeHtml(p.enriched?.resolvedTitle || p.title)}${p.accent ? `<span class="card-title-accent">${escapeHtml(p.accent)}</span>` : ''}</h3>
             </div>
             
-            <p class="project-card-desc">${escapeHtml(p.tagline)}</p>
+            <p class="project-card-desc">${escapeHtml(p.tagline || p.description)}</p>
             
             <div class="project-card-tags">
-              ${(p.tags || []).map((t) => `<span class="project-card-tag">${escapeHtml(t)}</span>`).join('')}
+              ${(p.tags || []).slice(0, 4).map((t) => `<span class="project-card-tag">${escapeHtml(t)}</span>`).join('')}
             </div>
-
-            ${
-              p.features && p.features.length > 0
-                ? `
-              <div class="project-card-feature-chips">
-                ${p.features
-                  .slice(0, 3)
-                  .map(
-                    (f) => `
-                  <div class="card-feature-mini">
-                    <span class="mini-icon">${escapeHtml(f.icon)}</span>
-                    <span class="mini-name">${escapeHtml(f.name)}</span>
-                  </div>
-                `
-                  )
-                  .join('')}
-              </div>
-            `
-                : ''
-            }
 
             ${
               isEnriched
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             <div class="project-card-footer">
-              <button class="btn-card-showcase" data-id="${escapeHtml(p.id)}">
+              <button type="button" class="btn-card-showcase" data-id="${escapeHtml(p.id)}" aria-label="Explore ${escapeHtml(p.title)} case study">
                 <span>Explore Showcase</span> ↗
               </button>
 
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ? `<a href="${escapeHtml(p.githubUrl)}" target="_blank" rel="noopener" class="project-card-link" title="Open GitHub Repository">GitHub ↗</a>`
                     : `<span class="project-card-link disabled" title="${escapeHtml(p.repoNote || 'Repository in preparation')}">Repo Soon</span>`
                 }
-                <button class="project-card-enrich" data-id="${escapeHtml(p.id)}" data-url="${escapeHtml(p.url)}" title="Live scrape metadata via Context.dev">
+                <button type="button" class="project-card-enrich" data-id="${escapeHtml(p.id)}" data-url="${escapeHtml(p.url)}" title="Live scrape metadata via Context.dev">
                   ${isEnriched ? '⚡ Re-enrich' : '⚡ Enrich'}
                 </button>
               </div>
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    document.querySelectorAll('.project-card-image').forEach((imgWrap) => {
+    document.querySelectorAll('.project-card-cover').forEach((imgWrap) => {
       imgWrap.addEventListener('click', (e) => {
         const card = e.currentTarget.closest('.project-card');
         if (card) {
@@ -225,11 +225,41 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    initProjectCardTilt();
+
     // Update gallery pinning geometry with newly rendered card widths
     if (stepTotalEl && projects) {
       stepTotalEl.textContent = String(projects.length).padStart(2, '0');
     }
     setTimeout(updateGalleryMetrics, 50);
+  }
+
+  // Interactive 3D Perspective Tilt for Project Cards
+  function initProjectCardTilt() {
+    if (prefersReducedMotion || window.innerWidth <= 1024) return;
+    const cards = document.querySelectorAll('.project-card');
+    cards.forEach((card) => {
+      let isTicking = false;
+      card.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        if (isTicking) return;
+        isTicking = true;
+        requestAnimationFrame(() => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const cx = rect.width / 2;
+          const cy = rect.height / 2;
+          const rotX = ((cy - y) / cy) * 4.5;
+          const rotY = ((x - cx) / cx) * 4.5;
+          card.style.transform = `perspective(1000px) translateY(-8px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.018, 1.018, 1.018)`;
+          isTicking = false;
+        });
+      });
+      card.addEventListener('pointerleave', () => {
+        card.style.transform = '';
+      });
+    });
   }
 
   // ============================================================
@@ -457,7 +487,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================================
   // 4. Pinned Horizontal Project Gallery (Scroll-Linked + Snap)
   // ============================================================
-  const CARD_STEP = 472; // 440px card width + 32px gap
+  function getCardStep() {
+    const card = projectsCarousel ? projectsCarousel.querySelector('.project-card') : null;
+    if (!card) return 408;
+    const style = window.getComputedStyle(projectsCarousel);
+    const gap = parseFloat(style.gap) || 28;
+    return card.offsetWidth + gap;
+  }
+
   let isPointerCaptured = false;
   let pointerStartX = 0;
   let dragStartTranslateX = 0;
@@ -481,7 +518,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const trackWidth = projectsCarousel.scrollWidth;
     const windowWidth = window.innerWidth;
-    const endPadding = Math.max(120, (windowWidth - 440) / 2);
+    const firstCard = projectsCarousel.querySelector('.project-card');
+    const cardWidth = firstCard ? firstCard.offsetWidth : 380;
+    const endPadding = Math.max(100, (windowWidth - cardWidth) / 2);
     maxTravelDistance = Math.max(0, trackWidth - windowWidth + endPadding);
 
     if (maxTravelDistance <= 0) {
@@ -529,7 +568,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const targetTranslate = Math.min(maxTravelDistance, activeCardIndex * CARD_STEP);
+    const cardStep = getCardStep();
+    const targetTranslate = Math.min(maxTravelDistance, activeCardIndex * cardStep);
     currentTranslateX = targetTranslate;
 
     if (smooth) {
@@ -591,7 +631,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update active card index indicator based on current translation
     const totalCards = portfolioData?.projects?.length || 3;
-    const newIdx = Math.min(totalCards - 1, Math.max(0, Math.round(currentTranslateX / CARD_STEP)));
+    const cardStep = getCardStep();
+    const newIdx = Math.min(totalCards - 1, Math.max(0, Math.round(currentTranslateX / cardStep)));
     if (newIdx !== activeCardIndex) {
       activeCardIndex = newIdx;
       updateCarouselControls();
@@ -672,7 +713,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (hasDragged) {
         // Snap to nearest card
-        const targetIndex = Math.round(currentTranslateX / CARD_STEP);
+        const cardStep = getCardStep();
+        const targetIndex = Math.round(currentTranslateX / cardStep);
         goToCard(targetIndex, true);
       }
     };
