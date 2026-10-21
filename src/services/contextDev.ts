@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import ContextDev from 'context.dev';
+import { ContextDev } from 'context.dev';
 
 dotenv.config();
 

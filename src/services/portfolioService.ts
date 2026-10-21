@@ -66,7 +66,14 @@ export interface DeveloperProfile {
 }
 
 export class PortfolioService {
-  private contextDev: ContextDevService;
+  private _contextDev?: ContextDevService;
+
+  private get contextDev(): ContextDevService {
+    if (!this._contextDev) {
+      this._contextDev = getContextDevService();
+    }
+    return this._contextDev;
+  }
 
   private profile: DeveloperProfile = {
     name: 'Mrh Rafi',
@@ -322,7 +329,9 @@ export class PortfolioService {
   };
 
   constructor(contextDev?: ContextDevService) {
-    this.contextDev = contextDev || getContextDevService();
+    if (contextDev) {
+      this._contextDev = contextDev;
+    }
   }
 
   public getProfile(): DeveloperProfile {
