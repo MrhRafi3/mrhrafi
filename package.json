@@ -1,0 +1,25 @@
+{
+  "name": "portfolio-context-dev",
+  "version": "1.0.0",
+  "description": "Portfolio website powered by Context.dev for live project metadata, client brand intelligence, and styleguide extraction",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "test": "NODE_ENV=test tsx --test tests/**/*.test.ts",
+    "verify:live": "tsx scripts/verifyLiveCall.ts"
+  },
+  "dependencies": {
+    "context.dev": "^1.0.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.9",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}
