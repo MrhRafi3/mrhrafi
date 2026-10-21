@@ -994,144 +994,293 @@ document.addEventListener('DOMContentLoaded', () => {
   function initSkillsPhysics() {
     const wrap = document.getElementById('skills-physics-wrap');
     const canvas = document.getElementById('skills-physics-canvas');
-    const staticTags = document.getElementById('skills-static-tags');
-    if (!wrap || !canvas || !window.Matter || prefersReducedMotion || window.innerWidth <= 640) {
+    const container = document.getElementById('skills-pills-container');
+    if (!wrap || !canvas || !container) return;
+
+    // Guaranteed visible HTML fallback:
+    // If reduced-motion is requested or screen is mobile, keep static pills visible.
+    const MatterLib = window.Matter || (typeof Matter !== 'undefined' ? Matter : null);
+    if (!MatterLib || prefersReducedMotion || window.innerWidth <= 640) {
       return;
     }
 
-    const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Events, Body } = window.Matter;
-    const engine = Engine.create({ enableSleeping: true });
-    engine.gravity.y = 0.85;
+    // Prevent double initialization
+    if (wrap.dataset.physicsInit === 'true') return;
+    wrap.dataset.physicsInit = 'true';
 
-    const width = wrap.clientWidth || 760;
-    const height = 320;
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    try {
+      const { Engine, Bodies, Composite, Body, Sleeping } = MatterLib;
 
-    wrap.classList.add('has-canvas');
-
-    // Create boundaries (floor, left wall, right wall)
-    const floor = Bodies.rectangle(width / 2, height + 25, width * 2, 50, { isStatic: true });
-    const leftWall = Bodies.rectangle(-25, height / 2, 50, height * 2, { isStatic: true });
-    const rightWall = Bodies.rectangle(width + 25, height / 2, 50, height * 2, { isStatic: true });
-    Composite.add(engine.world, [floor, leftWall, rightWall]);
-
-    // Skill pills labels
-    const tagElements = staticTags ? Array.from(staticTags.querySelectorAll('.feature-tag')) : [];
-    const skillNames = tagElements.length > 0
-      ? tagElements.map((t) => t.textContent.trim())
-      : ['Flutter', 'Dart', 'Riverpod', 'Clean Architecture', 'C++', 'DSA', 'Custom Canvas', 'SQLite', 'REST APIs', 'Git', 'Touch UI'];
-
-    ctx.font = '600 13px "Plus Jakarta Sans", sans-serif';
-    const pillBodies = [];
-
-    skillNames.forEach((text, i) => {
-      const textWidth = ctx.measureText(text).width;
-      const pillW = Math.max(80, textWidth + 34);
-      const pillH = 38;
-      const startX = 60 + ((i * 120) % Math.max(100, width - 180));
-      const startY = -40 - i * 35; // Staggered drop from above
-
-      const body = Bodies.rectangle(startX, startY, pillW, pillH, {
-        chamfer: { radius: 19 },
-        restitution: 0.35,
-        friction: 0.4,
-        frictionAir: 0.015,
-        angle: (i % 2 === 0 ? 1 : -1) * (0.05 + (i * 0.03)),
-      });
-      body.skillLabel = text;
-      body.pillW = pillW;
-      body.pillH = pillH;
-      pillBodies.push(body);
-    });
-
-    Composite.add(engine.world, pillBodies);
-
-    // Mouse control for grabbing and tossing pills
-    const mouse = Mouse.create(canvas);
-    // Remove wheel capture so scrolling works over canvas
-    canvas.removeEventListener('wheel', mouse.mousewheel);
-    canvas.removeEventListener('DOMMouseScroll', mouse.mousewheel);
-
-    const mouseConstraint = MouseConstraint.create(engine, {
-      mouse,
-      constraint: { stiffness: 0.2, damping: 0.1, render: { visible: false } },
-    });
-    Composite.add(engine.world, mouseConstraint);
-
-    // Wake up bodies when interacting
-    Events.on(mouseConstraint, 'startdrag', () => {
-      pillBodies.forEach((b) => Body.setSleeping(b, false));
-    });
-
-    let isRunning = false;
-    let animId = null;
-
-    function renderLoop() {
-      if (!isRunning) return;
-      Engine.update(engine, 1000 / 60);
-
-      ctx.clearRect(0, 0, width, height);
-
-      // Draw custom tactile pills
-      pillBodies.forEach((b) => {
-        const { x, y } = b.position;
-        const angle = b.angle;
-        const w = b.pillW;
-        const h = b.pillH;
-
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(angle);
-
-        // Pill background
-        ctx.beginPath();
-        if (ctx.roundRect) {
-          ctx.roundRect(-w / 2, -h / 2, w, h, h / 2);
+      const wakeBody = (b) => {
+        if (!b) return;
+        if (Sleeping && typeof Sleeping.set === 'function') {
+          Sleeping.set(b, false);
         } else {
-          ctx.rect(-w / 2, -h / 2, w, h);
+          b.isSleeping = false;
         }
-        ctx.fillStyle = '#f8f7f4';
-        ctx.fill();
-        ctx.lineWidth = 1.5;
-        ctx.strokeStyle = '#2e0cff';
-        ctx.stroke();
+      };
 
-        // Pill text
-        ctx.font = '600 13px "Plus Jakarta Sans", sans-serif';
-        ctx.fillStyle = '#0a0a0a';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(b.skillLabel, 0, 1);
+      const wakeAllBodies = () => {
+        pillBodies.forEach(wakeBody);
+      };
 
-        ctx.restore();
+      const engine = Engine.create({ enableSleeping: true });
+      engine.gravity.y = 0.9;
+
+      let width = wrap.clientWidth || 800;
+      let height = Math.max(380, wrap.clientHeight || 380);
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      const ctx = canvas.getContext('2d');
+      if (ctx) ctx.scale(dpr, dpr);
+
+      // Boundaries fully enclosing the container
+      let floor = Bodies.rectangle(width / 2, height - 8, width * 3, 30, { isStatic: true, label: 'floor' });
+      let ceiling = Bodies.rectangle(width / 2, -100, width * 3, 40, { isStatic: true, label: 'ceiling' });
+      let leftWall = Bodies.rectangle(-25, height / 2, 50, height * 4, { isStatic: true, label: 'leftWall' });
+      let rightWall = Bodies.rectangle(width + 25, height / 2, 50, height * 4, { isStatic: true, label: 'rightWall' });
+
+      Composite.add(engine.world, [floor, ceiling, leftWall, rightWall]);
+
+      // Collect real HTML skill pills
+      const pillEls = Array.from(container.querySelectorAll('.skill-pill'));
+      if (pillEls.length === 0) return;
+
+      const pillBodies = [];
+
+      pillEls.forEach((el, i) => {
+        const rect = el.getBoundingClientRect();
+        const pillW = Math.max(70, Math.round(rect.width) || 120);
+        const pillH = Math.max(34, Math.round(rect.height) || 40);
+
+        // Distribute within visible bounds so pills are immediately visible inside the card
+        const col = i % 3;
+        const row = Math.floor(i / 3);
+        const colSpacing = (width - 120) / 3;
+        const startX = 60 + col * colSpacing + (row % 2 ? 25 : -15) + (Math.random() * 20);
+        const startY = 70 + row * 65;
+
+        const body = Bodies.rectangle(startX, startY, pillW, pillH, {
+          chamfer: { radius: pillH / 2 },
+          restitution: 0.35,
+          friction: 0.25,
+          frictionAir: 0.015,
+          angle: (i % 2 === 0 ? 1 : -1) * (0.04 + (i * 0.02)),
+        });
+
+        body.pillEl = el;
+        body.pillW = pillW;
+        body.pillH = pillH;
+        pillBodies.push(body);
       });
 
-      animId = requestAnimationFrame(renderLoop);
-    }
+      Composite.add(engine.world, pillBodies);
 
-    // IntersectionObserver to only simulate when visible (0% CPU when offscreen)
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            if (!isRunning) {
-              isRunning = true;
-              pillBodies.forEach((b) => Body.setSleeping(b, false));
-              renderLoop();
+      // Activate physics mode on container — real HTML pills are now positioned by physics transforms
+      wrap.classList.add('has-physics');
+
+      // Pointer event handlers on real HTML pills for silky-smooth drag & throw
+      let activeDrag = null;
+
+      pillBodies.forEach((b) => {
+        const el = b.pillEl;
+
+        el.addEventListener('pointerdown', (e) => {
+          if (e.button !== 0 && e.pointerType === 'mouse') return;
+          e.preventDefault();
+          el.setPointerCapture(e.pointerId);
+          el.classList.add('is-dragging');
+
+          activeDrag = {
+            pointerId: e.pointerId,
+            body: b,
+            el: el,
+            lastX: e.clientX,
+            lastY: e.clientY,
+            lastTime: performance.now(),
+            vx: 0,
+            vy: 0,
+          };
+
+          wakeBody(b);
+          Body.setStatic(b, true);
+        });
+
+        el.addEventListener('pointermove', (e) => {
+          if (!activeDrag || activeDrag.pointerId !== e.pointerId) return;
+          e.preventDefault();
+
+          const now = performance.now();
+          const dt = Math.max(8, now - activeDrag.lastTime);
+          const dx = e.clientX - activeDrag.lastX;
+          const dy = e.clientY - activeDrag.lastY;
+
+          activeDrag.vx = (dx / dt) * 16;
+          activeDrag.vy = (dy / dt) * 16;
+          activeDrag.lastX = e.clientX;
+          activeDrag.lastY = e.clientY;
+          activeDrag.lastTime = now;
+
+          const wrapRect = wrap.getBoundingClientRect();
+          const targetX = e.clientX - wrapRect.left;
+          const targetY = e.clientY - wrapRect.top;
+
+          Body.setPosition(b, {
+            x: Math.max(b.pillW / 2, Math.min(width - b.pillW / 2, targetX)),
+            y: Math.max(b.pillH / 2, Math.min(height - b.pillH / 2, targetY)),
+          });
+
+          // Immediate visual update during drag
+          const px = (b.position.x - b.pillW / 2).toFixed(1);
+          const py = (b.position.y - b.pillH / 2).toFixed(1);
+          el.style.transform = `translate3d(${px}px, ${py}px, 0) rotate(${b.angle.toFixed(3)}rad)`;
+
+          wakeAllBodies();
+        });
+
+        const handleRelease = (e) => {
+          if (!activeDrag || activeDrag.pointerId !== e.pointerId) return;
+          el.classList.remove('is-dragging');
+
+          try {
+            el.releasePointerCapture(e.pointerId);
+          } catch (_) {}
+
+          Body.setStatic(b, false);
+          // Apply throw velocity with bounded momentum
+          const maxVel = 18;
+          const clampVx = Math.max(-maxVel, Math.min(maxVel, activeDrag.vx || 0));
+          const clampVy = Math.max(-maxVel, Math.min(maxVel, activeDrag.vy || 0));
+          Body.setVelocity(b, { x: clampVx, y: clampVy });
+
+          wakeAllBodies();
+          activeDrag = null;
+        };
+
+        el.addEventListener('pointerup', handleRelease);
+        el.addEventListener('pointercancel', handleRelease);
+      });
+
+      let isRunning = false;
+      let animId = null;
+
+      function renderFrame() {
+        if (!isRunning) return;
+
+        Engine.update(engine, 1000 / 60);
+
+        if (ctx) {
+          ctx.clearRect(0, 0, width, height);
+        }
+
+        pillBodies.forEach((b) => {
+          // Keep pills inside visible bounds
+          const halfW = b.pillW / 2;
+          const halfH = b.pillH / 2;
+          let clampedX = b.position.x;
+          let clampedY = b.position.y;
+
+          if (clampedX < halfW + 4) {
+            clampedX = halfW + 4;
+            Body.setPosition(b, { x: clampedX, y: clampedY });
+            Body.setVelocity(b, { x: Math.abs(b.velocity.x) * 0.4, y: b.velocity.y });
+          } else if (clampedX > width - halfW - 4) {
+            clampedX = width - halfW - 4;
+            Body.setPosition(b, { x: clampedX, y: clampedY });
+            Body.setVelocity(b, { x: -Math.abs(b.velocity.x) * 0.4, y: b.velocity.y });
+          }
+
+          if (clampedY > height - halfH - 8) {
+            clampedY = height - halfH - 8;
+            Body.setPosition(b, { x: clampedX, y: clampedY });
+          }
+
+          const px = (clampedX - halfW).toFixed(1);
+          const py = (clampedY - halfH).toFixed(1);
+          const rot = b.angle.toFixed(3);
+          b.pillEl.style.transform = `translate3d(${px}px, ${py}px, 0) rotate(${rot}rad)`;
+
+          // Soft contact shadow rendered on canvas under each pill for depth
+          if (ctx) {
+            const shadowY = Math.min(height - 6, clampedY + halfH + 2);
+            const shadowAlpha = Math.max(0, 0.12 - (shadowY - clampedY - halfH) * 0.005);
+            if (shadowAlpha > 0.01) {
+              ctx.beginPath();
+              ctx.ellipse(clampedX, shadowY, halfW * 0.8, 4, 0, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(46, 12, 255, ${shadowAlpha.toFixed(3)})`;
+              ctx.fill();
             }
-          } else {
-            isRunning = false;
-            if (animId) cancelAnimationFrame(animId);
           }
         });
-      },
-      { threshold: 0.1 }
-    );
 
-    observer.observe(wrap);
+        animId = requestAnimationFrame(renderFrame);
+      }
+
+      // Initial layout tick to position pills immediately
+      pillBodies.forEach((b) => {
+        const px = (b.position.x - b.pillW / 2).toFixed(1);
+        const py = (b.position.y - b.pillH / 2).toFixed(1);
+        b.pillEl.style.transform = `translate3d(${px}px, ${py}px, 0) rotate(${b.angle.toFixed(3)}rad)`;
+      });
+
+      // IntersectionObserver: only simulate physics when on-screen (0% CPU off-screen)
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              if (!isRunning) {
+                isRunning = true;
+                wakeAllBodies();
+                renderFrame();
+              }
+            } else {
+              isRunning = false;
+              if (animId) cancelAnimationFrame(animId);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      observer.observe(wrap);
+
+      // Handle window resize gracefully
+      window.addEventListener('resize', () => {
+        if (window.innerWidth <= 640) {
+          // Revert to clean static tags on mobile
+          wrap.classList.remove('has-physics');
+          pillEls.forEach((el) => (el.style.transform = ''));
+          isRunning = false;
+          if (animId) cancelAnimationFrame(animId);
+          return;
+        }
+
+        wrap.classList.add('has-physics');
+        width = wrap.clientWidth;
+        height = Math.max(380, wrap.clientHeight);
+
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        if (ctx) ctx.scale(dpr, dpr);
+
+        Body.setPosition(floor, { x: width / 2, y: height - 8 });
+        Body.setPosition(rightWall, { x: width + 25, y: height / 2 });
+        Body.setPosition(leftWall, { x: -25, y: height / 2 });
+
+        wakeAllBodies();
+        if (!isRunning) {
+          isRunning = true;
+          renderFrame();
+        }
+      });
+    } catch (err) {
+      console.warn('Physics playground initialization bypassed, using static HTML pills:', err);
+      wrap.classList.remove('has-physics');
+      const pillEls = container.querySelectorAll('.skill-pill');
+      pillEls.forEach((el) => (el.style.transform = ''));
+    }
   }
 
   // ============================================================

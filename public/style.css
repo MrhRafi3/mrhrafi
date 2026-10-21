@@ -1909,7 +1909,7 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   opacity: 1;
 }
 
-/* Interactive Physics Sandbox */
+/* Interactive Physics Sandbox & Real Skill Pills */
 .skills-physics-card {
   position: relative;
   background: var(--white);
@@ -1923,6 +1923,14 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   display: flex;
   flex-direction: column;
 }
+.skills-physics-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 5;
+}
 .skills-physics-badge {
   display: inline-flex;
   align-items: center;
@@ -1934,8 +1942,6 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   font-family: var(--font-handwritten);
   font-size: 1.25rem;
   font-weight: 700;
-  align-self: flex-start;
-  margin-bottom: 16px;
   box-shadow: 0 4px 12px rgba(255, 208, 0, 0.35);
   user-select: none;
 }
@@ -1947,17 +1953,82 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   animation: indicator-pulse 1.5s infinite ease-in-out;
 }
 .skills-physics-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 320px;
+  height: 100%;
   display: block;
+  pointer-events: none;
+  z-index: 1;
+  background: transparent;
+}
+.skills-pills-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+  padding: 36px 16px 20px;
+  margin: auto 0;
+  position: relative;
+  z-index: 2;
+  max-width: 860px;
+  align-self: center;
+}
+.skill-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--blue-dark);
+  background: #ffffff;
+  border: 1.5px solid var(--blue);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 4px 14px rgba(46, 12, 255, 0.08);
+  user-select: none;
   cursor: grab;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background 0.2s ease;
   touch-action: none;
 }
-.skills-physics-canvas:active {
-  cursor: grabbing;
+.skill-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(46, 12, 255, 0.16);
+  background: var(--blue-soft);
 }
-.skills-physics-card.has-canvas .tags-cloud {
-  display: none;
+.skill-pill-bullet {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--blue);
+  flex-shrink: 0;
+}
+.skills-physics-card.has-physics .skills-pills-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  max-width: none;
+  pointer-events: none;
+}
+.skills-physics-card.has-physics .skill-pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  pointer-events: auto;
+  transition: none;
+}
+.skills-physics-card.has-physics .skill-pill.is-dragging {
+  cursor: grabbing;
+  z-index: 20;
+  box-shadow: 0 16px 36px rgba(46, 12, 255, 0.28);
 }
 
 /* Magnetic Talk Cursor */
