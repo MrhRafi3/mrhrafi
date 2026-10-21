@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "cleanUrls": true,
   "functions": {
     "api/index.ts": {
+      "includeFiles": "public/**"
+    },
+    "src/server.ts": {
       "includeFiles": "public/**"
     }
   },
@@ -17,10 +19,6 @@
     },
     {
       "source": "/",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ]

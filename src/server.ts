@@ -129,3 +129,6 @@ export function startServer(port = process.env.PORT || 3000) {
   });
   return server;
 }
+
+const defaultApp = createApp();
+export default defaultApp;
