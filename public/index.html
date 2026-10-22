@@ -5,22 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mrh Rafi — Flutter App Developer &amp; Mobile UI Engineer</title>
   <meta name="description" content="Mrh Rafi is an independent Flutter App Developer and Mobile UI Engineer based in Dhaka, Bangladesh. Exploring tactile mobile apps, clean architecture, and C++ / DSA foundations." />
+  <meta name="author" content="Mrh Rafi" />
+  <meta name="keywords" content="Mrh Rafi, Flutter developer, mobile app developer, Dhaka, Bangladesh, iOS, Android, UI engineer, C++, mobile design, Context.dev" />
+  <meta name="theme-color" content="#2e0cff" />
+  <link rel="canonical" href="https://rafi.dev" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://rafi.dev" />
   <meta property="og:title" content="Mrh Rafi — Flutter App Developer &amp; Mobile UI Engineer" />
   <meta property="og:description" content="Independent Flutter developer based in Dhaka, Bangladesh. Engineering fluid, tactile mobile applications and clean cross-platform experiences." />
-  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/images/rafi-portrait.jpg" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://rafi.dev" />
+  <meta name="twitter:title" content="Mrh Rafi — Flutter App Developer &amp; Mobile UI Engineer" />
+  <meta name="twitter:description" content="Independent Flutter developer based in Dhaka, Bangladesh. Engineering fluid, tactile mobile applications and clean cross-platform experiences." />
+  <meta name="twitter:image" content="/images/rafi-portrait.jpg" />
+
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preload" as="image" href="/images/rafi-portrait.jpg" />
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@600;700&family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 </head>
 <body>
+  <!-- ======================== SKIP LINK ======================== -->
+  <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
   <!-- ======================== NAVBAR ======================== -->
-  <header class="navbar" id="navbar">
+  <header class="navbar" id="navbar" role="banner">
     <div class="nav-inner">
-      <a href="#" class="nav-logo">MRH RAFI<span class="nav-logo-accent">.DEV</span></a>
-      <nav class="nav-pills" id="nav-pills">
-        <a href="#" class="nav-pill active">Home</a>
+      <a href="#home" class="nav-logo" aria-label="Mrh Rafi Homepage">MRH RAFI<span class="nav-logo-accent">.DEV</span></a>
+      <nav class="nav-pills" id="nav-pills" aria-label="Main Navigation">
+        <a href="#home" class="nav-pill active">Home</a>
         <a href="#about" class="nav-pill">About</a>
         <a href="#skills" class="nav-pill">Skills</a>
         <a href="#services" class="nav-pill">Services</a>
@@ -30,18 +50,19 @@
         <a href="#contact" class="nav-pill">Contact</a>
       </nav>
       <a href="#contact" class="nav-cta-btn">
-        <span class="nav-cta-emoji">👋</span> Let's talk
+        <span class="nav-cta-emoji" aria-hidden="true">👋</span> Let's talk
       </a>
-      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav-overlay">
         <span></span><span></span><span></span>
       </button>
     </div>
   </header>
 
   <!-- Mobile nav overlay -->
-  <div class="mobile-nav-overlay" id="mobile-nav-overlay">
-    <nav class="mobile-nav-links">
-      <a href="#">Home</a>
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay" role="dialog" aria-modal="true" aria-label="Mobile Navigation" aria-hidden="true">
+    <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close navigation menu">✕</button>
+    <nav class="mobile-nav-links" aria-label="Mobile Navigation Links">
+      <a href="#home">Home</a>
       <a href="#about">About</a>
       <a href="#skills">Skills</a>
       <a href="#services">Services</a>
@@ -56,17 +77,21 @@
     </div>
   </div>
 
-  <main id="main-content">
+  <main id="main-content" tabindex="-1">
     <!-- ======================== HERO ======================== -->
-    <section class="hero" data-ground="blue">
+    <section class="hero" data-ground="blue" id="home">
       <div class="hero-container">
         <div class="hero-content">
+          <div class="hero-kicker-pill">
+            <span class="hero-kicker-dot" aria-hidden="true"></span>
+            <span>Available for Select Mobile Engineering Projects</span>
+          </div>
           <h1 class="hero-headline" data-split>
             MOBILE APPS<br />
             THAT SHIP &amp;<br />
             <span class="hero-headline-accent">PERFORM</span>
           </h1>
-          <div class="hero-underline"></div>
+          <div class="hero-underline" aria-hidden="true"></div>
           <p class="hero-description">
             I'm Mrh Rafi, an independent Flutter developer and mobile UI engineer based in Dhaka, Bangladesh.
             I craft responsive, tactile mobile applications with clean architecture and robust C++ / DSA foundations —
@@ -74,20 +99,20 @@
           </p>
           <div class="hero-cta-group">
             <a href="#contact" class="btn btn-white">
-              Let's talk <span class="btn-arrow">↗</span>
+              Let's talk <span class="btn-arrow" aria-hidden="true">↗</span>
             </a>
             <a href="#projects" class="btn btn-ghost">Explore Projects</a>
           </div>
         </div>
         <div class="hero-photo-wrap">
-          <div class="hero-photo-bg"></div>
+          <div class="hero-photo-bg" aria-hidden="true"></div>
           <div class="hero-photo-placeholder">
-            <img src="/images/rafi-portrait.jpg" alt="Mrh Rafi — Flutter App Developer" class="hero-photo-img" onerror="this.style.display='none'" />
-            <div class="hero-photo-initials">R</div>
+            <img src="/images/rafi-portrait.jpg" alt="Mrh Rafi — Flutter App Developer and Mobile UI Engineer" class="hero-photo-img" loading="eager" fetchpriority="high" onerror="this.style.display='none'" />
+            <div class="hero-photo-initials" aria-hidden="true">R</div>
           </div>
-          <div class="hero-photo-annotation">
+          <div class="hero-photo-annotation" aria-hidden="true">
             <span class="annotation-text">that's me. I'll be the one<br/>crafting your app</span>
-            <svg class="annotation-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <svg class="annotation-arrow" width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
               <path d="M5 35 C 15 25, 25 15, 35 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
               <path d="M28 5 L36 8 L30 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             </svg>
@@ -532,7 +557,7 @@
             <span class="contact-channel-label">DIRECT EMAIL CHANNEL</span>
             <div class="contact-email-row">
               <a href="mailto:mrhrafi99@gmail.com" class="contact-email-link" id="email-address-text">mrhrafi99@gmail.com</a>
-              <button type="button" class="contact-copy-btn" id="copy-email-btn" title="Copy email address">
+              <button type="button" class="contact-copy-btn" id="copy-email-btn" title="Copy email address" aria-label="Copy email address to clipboard">
                 <span id="copy-btn-text">Copy</span>
               </button>
             </div>
@@ -587,12 +612,12 @@
       </div>
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="#" class="footer-logo">MRH RAFI<span class="nav-logo-accent">.DEV</span></a>
+          <a href="#home" class="footer-logo">MRH RAFI<span class="nav-logo-accent">.DEV</span></a>
           <p class="footer-tagline">Based in Dhaka, Bangladesh · Working with teams worldwide.</p>
         </div>
         <div class="footer-col">
           <h4 class="footer-col-title">Navigation</h4>
-          <a href="#">Home</a>
+          <a href="#home">Home</a>
           <a href="#about">About</a>
           <a href="#skills">Skills</a>
           <a href="#services">Services</a>
