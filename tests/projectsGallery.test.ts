@@ -20,6 +20,7 @@ describe('Projects Gallery Redesign Verification', () => {
       'public/images/project-covers/expify-cover.webp',
       'public/images/project-covers/nomnom-cover.webp',
       'public/images/project-covers/alchemy-cover.webp',
+      'public/images/project-covers/aevique-cover.webp',
     ];
     covers.forEach((relPath) => {
       const fullPath = path.resolve(process.cwd(), relPath);
@@ -50,22 +51,25 @@ describe('Projects Gallery Redesign Verification', () => {
     const profile = service.getProfile();
     const projects = profile.projects;
 
-    assert.strictEqual(projects.length, 4, 'Must have 4 projects');
+    assert.strictEqual(projects.length, 5, 'Must have 5 projects');
     const clocky = projects.find((p) => p.id === 'clocky');
     const expify = projects.find((p) => p.id === 'expify-beta');
     const nomnom = projects.find((p) => p.id === 'nomnom');
     const alchemy = projects.find((p) => p.id === 'alchemy');
+    const aevique = projects.find((p) => p.id === 'aevique');
 
     assert.ok(clocky?.coverSrc?.includes('clocky-cover.webp'), 'Clocky must have clocky-cover.webp');
     assert.ok(expify?.coverSrc?.includes('expify-cover.webp'), 'Expify must have expify-cover.webp');
     assert.ok(nomnom?.coverSrc?.includes('nomnom-cover.webp'), 'NomNom must have nomnom-cover.webp');
     assert.ok(alchemy?.coverSrc?.includes('alchemy-cover.webp'), 'Alchemy must have alchemy-cover.webp');
+    assert.ok(aevique?.coverSrc?.includes('aevique-cover.webp'), 'AEVIQUE must have aevique-cover.webp');
 
     // Verify modal original screenshots are preserved
     assert.ok(clocky && clocky.screenshots.length >= 5, 'Clocky must preserve detail screenshots');
     assert.ok(expify && expify.screenshots.length >= 5, 'Expify must preserve detail screenshots');
     assert.ok(nomnom && nomnom.screenshots.length >= 4, 'NomNom must preserve detail screenshots');
     assert.ok(alchemy && alchemy.screenshots.length === 5, 'Alchemy must have exactly 5 detail screenshots');
+    assert.ok(aevique && aevique.screenshots.length === 6, 'AEVIQUE must have 6 detail screenshots');
   });
 
   test('Projects section has deep charcoal/near-black theme and data-ground="ink"', () => {
@@ -96,6 +100,9 @@ describe('Projects Gallery Redesign Verification', () => {
 
     assert.ok(css.includes('.project-card--alchemy'), 'Alchemy accent class must exist');
     assert.ok(css.includes('--project-accent: #a78bfa;'), 'Alchemy purple accent must exist');
+
+    assert.ok(css.includes('.project-card--aevique'), 'AEVIQUE accent class must exist');
+    assert.ok(css.includes('--project-accent: #e2c285;'), 'AEVIQUE champagne gold accent must exist');
   });
 
   test('JavaScript handles graceful cover fallback and card tilt interaction', () => {

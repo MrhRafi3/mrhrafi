@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'expify-beta': return '💳';
       case 'nomnom': return '🍔';
       case 'alchemy': return '⚗️';
+      case 'aevique': return '✨';
       default: return '📱';
     }
   }
@@ -89,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'expify-beta': return '/images/project-covers/expify-cover.webp';
       case 'nomnom': return '/images/project-covers/nomnom-cover.webp';
       case 'alchemy': return '/images/project-covers/alchemy-cover.webp';
+      case 'aevique': return '/images/project-covers/aevique-cover.webp';
       default: return '';
     }
   }

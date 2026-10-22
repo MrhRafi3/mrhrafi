@@ -73,9 +73,9 @@ describe('Alchemy Project Integration Verification', () => {
     assert.strictEqual(nomnom.badge, 'FOOD DELIVERY');
     assert.ok(nomnom.screenshots.length >= 9);
 
-    // Verify ordering: Clocky -> Expify Beta -> NomNom -> Alchemy
+    // Verify ordering: Clocky -> Expify Beta -> NomNom -> Alchemy -> AEVIQUE
     const ids = profile.projects.map((p) => p.id);
-    assert.deepStrictEqual(ids, ['clocky', 'expify-beta', 'nomnom', 'alchemy']);
+    assert.deepStrictEqual(ids, ['clocky', 'expify-beta', 'nomnom', 'alchemy', 'aevique']);
   });
 
   test('CSS contains dedicated theme accent styles for Alchemy', () => {

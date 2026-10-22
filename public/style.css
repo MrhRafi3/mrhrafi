@@ -1004,6 +1004,13 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   --project-accent-soft: rgba(167, 139, 250, 0.12);
   --project-btn-color: #120b24;
 }
+.project-card--aevique {
+  --project-accent: #e2c285;
+  --project-accent-glow: rgba(226, 194, 133, 0.24);
+  --project-accent-border: rgba(226, 194, 133, 0.5);
+  --project-accent-soft: rgba(226, 194, 133, 0.12);
+  --project-btn-color: #1a150c;
+}
 
 /* 16:9 Cover Image Visual Area */
 .project-card-cover {

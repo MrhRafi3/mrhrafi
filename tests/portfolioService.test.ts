@@ -60,8 +60,8 @@ describe('PortfolioService & Express App (Mocked)', () => {
     assert.ok(profile.skills.includes('C++'));
     assert.ok(profile.skills.includes('Data Structures & Algorithms'));
 
-    assert.equal(profile.projects.length, 4);
-    const [clocky, expify, nomnom, alchemy] = profile.projects;
+    assert.equal(profile.projects.length, 5);
+    const [clocky, expify, nomnom, alchemy, aevique] = profile.projects;
     assert.equal(clocky.id, 'clocky');
     assert.equal(clocky.githubUrl, 'https://github.com/MrhRafi3/Clocky');
     assert.ok(clocky.screenshots.length >= 5);
@@ -77,6 +77,11 @@ describe('PortfolioService & Express App (Mocked)', () => {
     assert.equal(alchemy.title, 'Alchemy');
     assert.equal(alchemy.category, 'Mobile Application / Game');
     assert.equal(alchemy.screenshots.length, 5);
+
+    assert.equal(aevique.id, 'aevique');
+    assert.equal(aevique.title, 'AEVIQUE');
+    assert.equal(aevique.category, 'Flutter Mobile App · Photo Editing');
+    assert.equal(aevique.screenshots.length, 6);
   });
 
   test('PortfolioService enriches project via scrape', async () => {

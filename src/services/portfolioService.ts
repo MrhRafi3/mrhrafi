@@ -367,6 +367,73 @@ export class PortfolioService {
           },
         ],
       },
+      {
+        id: 'aevique',
+        title: 'AEVIQUE',
+        accent: '.',
+        badge: 'PHOTO STUDIO',
+        platform: 'Flutter mobile application',
+        tagline: 'Refined photo-editing mobile studio with real-time lighting adjustments, portrait retouching, and preset filters',
+        category: 'Flutter Mobile App · Photo Editing',
+        url: 'https://github.com/mrhrafi3',
+        githubUrl: null,
+        demoUrl: null,
+        repoNote: 'AEVIQUE is in active development; repository and release builds will be available soon.',
+        tags: ['Flutter', 'Dart', 'Photo Editing', 'Image Processing', 'Mobile UI'],
+        role: 'Flutter App Developer — Mobile UI Design & Photo Engine',
+        description:
+          'A photo-editing app focused on providing a polished editing experience and a refined visual interface.',
+        overview:
+          'AEVIQUE delivers an elegant, tactile photo-editing studio designed for creators. Features intuitive light parameter adjustments, geometric crop and rotate tools, granular filter and preset tuning, portrait retouching with skin glow enhancements, and high-fidelity export configurations.',
+        highlights: [
+          'Engineered tactile Light Adjustment controls featuring Auto enhancement alongside precision Exposure, Brightness, and Contrast tuning.',
+          'Designed Crop & Rotate transform suite with rule-of-thirds grid, rotation, horizontal/vertical flipping, and standard aspect ratio presets (1:1, 4:5, 16:9).',
+          'Built comprehensive Filter & Preset system with categorized grading looks (Vivid, Dramatic, B&W) and real-time intensity blending.',
+          'Integrated specialized Portrait Retouching tools including Skin Smooth, Skin Glow, and Blemish Heal with radiant midtone preservation.',
+          'Implemented high-fidelity export pipeline supporting JPEG/PNG formats, dynamic compression quality calibration, and live rendered file size estimation.',
+        ],
+        features: [
+          { name: 'Lighting & Adjustments', detail: 'Real-time Exposure, Brightness, Contrast sliders and one-tap Auto correction', icon: '☀️' },
+          { name: 'Crop & Aspect Ratios', detail: 'Rule-of-thirds crop handles, rotation, flipping, and social aspect presets', icon: '✂️' },
+          { name: 'Filters & Color Grading', detail: 'Curated filter collections with granular intensity percentage control', icon: '🎨' },
+          { name: 'Portrait Retouching', detail: 'Skin smoothing, blemish healing, and radiant skin tone glow sliders', icon: '✨' },
+          { name: 'Format & Export', detail: 'JPEG/PNG export, 0-100% quality scaling, and live calculated file sizes', icon: '💾' },
+        ],
+        coverSrc: '/images/project-covers/aevique-cover.webp',
+        screenshotSrc: '/images/Aevique/Simulator Screenshot - iPhone 16e - 2026-10-22 at 15.18.25.png',
+        screenshots: [
+          {
+            src: '/images/Aevique/Simulator Screenshot - iPhone 16e - 2026-10-22 at 15.18.25.png',
+            label: 'Studio Home',
+            alt: 'AEVIQUE studio home screen with Open Photo and Open Camera options, recent edits canvas, and bottom navigation',
+          },
+          {
+            src: '/images/Aevique/Simulator Screenshot - iPhone 16e - 2026-10-22 at 15.08.46.png',
+            label: 'Light Adjustments',
+            alt: 'AEVIQUE Light Adjustments screen showing Exposure, Brightness, and Contrast slider controls',
+          },
+          {
+            src: '/images/Aevique/Simulator Screenshot - iPhone 16e - 2026-10-22 at 15.10.03.png',
+            label: 'Crop & Rotate',
+            alt: 'AEVIQUE Crop and Rotate screen with composition grid overlay, flip controls, and aspect ratio presets',
+          },
+          {
+            src: '/images/Aevique/Simulator Screenshot - iPhone 16e - 2026-10-22 at 15.11.53.png',
+            label: 'Filters & Presets',
+            alt: 'AEVIQUE Filters and Presets screen displaying filter category tabs, intensity slider, and preset cards',
+          },
+          {
+            src: '/images/Aevique/Simulator Screenshot - iPhone 16e - 2026-10-22 at 15.12.20.png',
+            label: 'Portrait Retouching',
+            alt: 'AEVIQUE Portrait Retouching screen showing Skin Smooth, Skin Glow, and Blemish Heal tools',
+          },
+          {
+            src: '/images/Aevique/Simulator Screenshot - iPhone 16e - 2026-10-22 at 15.12.50.png',
+            label: 'Export Photo',
+            alt: 'AEVIQUE Export Photo screen with JPEG/PNG format toggle, quality slider, and rendered size estimate',
+          },
+        ],
+      },
     ],
     clients: [
       {
