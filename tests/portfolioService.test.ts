@@ -60,8 +60,8 @@ describe('PortfolioService & Express App (Mocked)', () => {
     assert.ok(profile.skills.includes('C++'));
     assert.ok(profile.skills.includes('Data Structures & Algorithms'));
 
-    assert.equal(profile.projects.length, 3);
-    const [clocky, expify, nomnom] = profile.projects;
+    assert.equal(profile.projects.length, 4);
+    const [clocky, expify, nomnom, alchemy] = profile.projects;
     assert.equal(clocky.id, 'clocky');
     assert.equal(clocky.githubUrl, 'https://github.com/MrhRafi3/Clocky');
     assert.ok(clocky.screenshots.length >= 5);
@@ -72,6 +72,11 @@ describe('PortfolioService & Express App (Mocked)', () => {
 
     assert.equal(nomnom.id, 'nomnom');
     assert.ok(nomnom.screenshots.length >= 9);
+
+    assert.equal(alchemy.id, 'alchemy');
+    assert.equal(alchemy.title, 'Alchemy');
+    assert.equal(alchemy.category, 'Mobile Application / Game');
+    assert.equal(alchemy.screenshots.length, 5);
   });
 
   test('PortfolioService enriches project via scrape', async () => {

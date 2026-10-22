@@ -19,6 +19,7 @@ describe('Projects Gallery Redesign Verification', () => {
       'public/images/project-covers/clocky-cover.webp',
       'public/images/project-covers/expify-cover.webp',
       'public/images/project-covers/nomnom-cover.webp',
+      'public/images/project-covers/alchemy-cover.webp',
     ];
     covers.forEach((relPath) => {
       const fullPath = path.resolve(process.cwd(), relPath);
@@ -28,24 +29,43 @@ describe('Projects Gallery Redesign Verification', () => {
     });
   });
 
+  test('All five Alchemy screenshots exist on disk and are accessible', () => {
+    const screenshots = [
+      'public/images/alchemy/home.png',
+      'public/images/alchemy/discover.png',
+      'public/images/alchemy/element-detail.png',
+      'public/images/alchemy/collection.png',
+      'public/images/alchemy/profile.png',
+    ];
+    screenshots.forEach((relPath) => {
+      const fullPath = path.resolve(process.cwd(), relPath);
+      assert.ok(fs.existsSync(fullPath), `Screenshot must exist at ${relPath}`);
+      const stats = fs.statSync(fullPath);
+      assert.ok(stats.size > 1000, `Screenshot ${relPath} must not be empty`);
+    });
+  });
+
   test('PortfolioService supplies coverSrc for all projects', () => {
     const service = new PortfolioService({} as unknown as ContextDevService);
     const profile = service.getProfile();
     const projects = profile.projects;
 
-    assert.strictEqual(projects.length, 3, 'Must have 3 projects');
+    assert.strictEqual(projects.length, 4, 'Must have 4 projects');
     const clocky = projects.find((p) => p.id === 'clocky');
     const expify = projects.find((p) => p.id === 'expify-beta');
     const nomnom = projects.find((p) => p.id === 'nomnom');
+    const alchemy = projects.find((p) => p.id === 'alchemy');
 
     assert.ok(clocky?.coverSrc?.includes('clocky-cover.webp'), 'Clocky must have clocky-cover.webp');
     assert.ok(expify?.coverSrc?.includes('expify-cover.webp'), 'Expify must have expify-cover.webp');
     assert.ok(nomnom?.coverSrc?.includes('nomnom-cover.webp'), 'NomNom must have nomnom-cover.webp');
+    assert.ok(alchemy?.coverSrc?.includes('alchemy-cover.webp'), 'Alchemy must have alchemy-cover.webp');
 
     // Verify modal original screenshots are preserved
     assert.ok(clocky && clocky.screenshots.length >= 5, 'Clocky must preserve detail screenshots');
     assert.ok(expify && expify.screenshots.length >= 5, 'Expify must preserve detail screenshots');
     assert.ok(nomnom && nomnom.screenshots.length >= 4, 'NomNom must preserve detail screenshots');
+    assert.ok(alchemy && alchemy.screenshots.length === 5, 'Alchemy must have exactly 5 detail screenshots');
   });
 
   test('Projects section has deep charcoal/near-black theme and data-ground="ink"', () => {
@@ -73,6 +93,9 @@ describe('Projects Gallery Redesign Verification', () => {
 
     assert.ok(css.includes('.project-card--nomnom'), 'NomNom accent class must exist');
     assert.ok(css.includes('--project-accent: #ff9f1c;'), 'NomNom warm yellow/orange accent must exist');
+
+    assert.ok(css.includes('.project-card--alchemy'), 'Alchemy accent class must exist');
+    assert.ok(css.includes('--project-accent: #a78bfa;'), 'Alchemy purple accent must exist');
   });
 
   test('JavaScript handles graceful cover fallback and card tilt interaction', () => {

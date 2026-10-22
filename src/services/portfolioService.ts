@@ -17,6 +17,7 @@ export interface Project {
   title: string;
   accent?: string;
   badge?: string;
+  platform?: string;
   tagline: string;
   category: string;
   url: string;
@@ -104,6 +105,7 @@ export class PortfolioService {
         id: 'clocky',
         title: 'Clocky',
         accent: '.',
+        platform: 'Flutter mobile application',
         tagline: 'Tactile Flutter timekeeping with glowing analog/digital World Clock, alarms, and precision stopwatch',
         category: 'Horological Utility',
         url: 'https://github.com/MrhRafi3/Clocky',
@@ -161,6 +163,7 @@ export class PortfolioService {
         title: 'Expify Beta',
         accent: ' Beta',
         badge: 'BETA',
+        platform: 'Flutter mobile application',
         tagline: 'Smart expense tracking mobile application with BDT (৳) cashflow, project budgets, and visual reports',
         category: 'Fintech / Utility',
         url: 'https://github.com/mrhrafi3',
@@ -233,6 +236,7 @@ export class PortfolioService {
         title: 'NomNom',
         accent: '.',
         badge: 'FOOD DELIVERY',
+        platform: 'Flutter mobile application',
         tagline: 'Contemporary food delivery and restaurant discovery mobile application built with Flutter',
         category: 'E-Commerce / Delivery UI',
         url: 'https://github.com/mrhrafi3',
@@ -302,6 +306,64 @@ export class PortfolioService {
             src: '/images/NomNom/progile-settings.png',
             label: 'Profile & Settings',
             alt: 'NomNom profile and account settings screen for Mrh Rafi',
+          },
+        ],
+      },
+      {
+        id: 'alchemy',
+        title: 'Alchemy',
+        accent: '.',
+        badge: 'ELEMENT FUSION',
+        platform: 'Flutter mobile application',
+        tagline: 'Tactile element-combination puzzle game where players synthesize and discover new cosmic elements',
+        category: 'Mobile Application / Game',
+        url: 'https://github.com/mrhrafi3',
+        githubUrl: null,
+        demoUrl: null,
+        repoNote: 'Alchemy is in active development; repository and release builds will be available soon.',
+        tags: ['Flutter', 'Dart', 'Mobile Game', 'Element Fusion', 'Interactive UI'],
+        role: 'Flutter App Developer — Mobile Application & Game Design',
+        description:
+          'An engaging element-combination game built with Flutter in which players discover new elements by combining existing ones. Features an interactive laboratory fusion chamber, discovery progression tree, and elemental collection system.',
+        overview:
+          'Players combine base primordial elements in a laboratory fusion chamber to unlock new discoveries, track progression across rarity tiers, and navigate an expanding constellation of synthesized elements with responsive mobile interactions.',
+        highlights: [
+          'Engineered an interactive Laboratory Fusion Chamber allowing players to drag and combine base elements to synthesize new discoveries.',
+          'Built an expanding Discovery Tree constellation visualizing elemental synthesis pathways and unlockable recipes.',
+          'Structured an Element Collection system with rarity tiers (Common to Legendary), search filters, and player level progression.',
+        ],
+        features: [
+          { name: 'Fusion Chamber', detail: 'Combine primordial elements to experiment and unlock newly synthesized elements', icon: '⚗️' },
+          { name: 'Discovery Tree', detail: 'Interactive constellation graph mapping element synthesis pathways', icon: '✦' },
+          { name: 'Element Collection', detail: 'Filterable catalog with rarity classifications, discovery stats, and XP progression', icon: '◈' },
+        ],
+        coverSrc: '/images/project-covers/alchemy-cover.webp',
+        screenshotSrc: '/images/alchemy/home.png',
+        screenshots: [
+          {
+            src: '/images/alchemy/home.png',
+            label: 'Laboratory',
+            alt: 'Alchemy Laboratory and Fusion Chamber screen where players drag or tap elements to combine and discover new elements',
+          },
+          {
+            src: '/images/alchemy/discover.png',
+            label: 'Discovery Tree',
+            alt: 'Alchemy Discovery Tree screen showing interactive constellation of cosmic element synthesis',
+          },
+          {
+            src: '/images/alchemy/element-detail.png',
+            label: 'Element Detail',
+            alt: 'Alchemy Element Detail screen showing Energy element properties, rarity tier, and discovery XP',
+          },
+          {
+            src: '/images/alchemy/collection.png',
+            label: 'Element Collection',
+            alt: 'Alchemy Element Collection screen showing discovered primordial elements with 40% discovery progress',
+          },
+          {
+            src: '/images/alchemy/profile.png',
+            label: 'Alchemist Profile',
+            alt: 'Alchemy Alchemist Profile screen showing player level 2, XP progress bar, total discoveries, and rarity breakdown',
           },
         ],
       },

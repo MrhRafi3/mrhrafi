@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'clocky': return '⏱️';
       case 'expify-beta': return '💳';
       case 'nomnom': return '🍔';
+      case 'alchemy': return '⚗️';
       default: return '📱';
     }
   }
@@ -87,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'clocky': return '/images/project-covers/clocky-cover.webp';
       case 'expify-beta': return '/images/project-covers/expify-cover.webp';
       case 'nomnom': return '/images/project-covers/nomnom-cover.webp';
+      case 'alchemy': return '/images/project-covers/alchemy-cover.webp';
       default: return '';
     }
   }
@@ -346,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <p class="modal-tagline">${escapeHtml(p.tagline)}</p>
 
           <div class="modal-role-badge">
-            <span class="role-icon">👤</span> ${escapeHtml(p.role || 'Flutter App Developer')}
+            <span class="role-icon">👤</span> ${escapeHtml(p.role || 'Flutter App Developer')}${p.platform ? ` · <span>${escapeHtml(p.platform)}</span>` : ''}
           </div>
 
           <div class="modal-section-block">
