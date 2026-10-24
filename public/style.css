@@ -47,7 +47,19 @@
 
 /* ======================== RESET ======================== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--navbar-bottom, 88px) + 16px);
+  -webkit-text-size-adjust: 100%;
+}
+section[id],
+main[id] {
+  scroll-margin-top: calc(var(--navbar-bottom, 88px) + 16px);
+}
+section:focus,
+section[id]:focus {
+  outline: none;
+}
 body {
   font-family: var(--font-body);
   color: var(--gray-900);
@@ -297,7 +309,11 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   border-radius: var(--radius-pill);
 }
 .mobile-nav-links a:hover,
-.mobile-nav-links a:focus-visible { color: var(--yellow); }
+.mobile-nav-links a:focus-visible,
+.mobile-nav-links a.active,
+.mobile-nav-links a[aria-current="page"] {
+  color: var(--yellow);
+}
 .mobile-nav-actions {
   display: flex;
   flex-direction: column;

@@ -1006,16 +1006,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function closeMobileNav() {
+  function closeMobileNav({ restoreFocus = false } = {}) {
     if (!mobileNavOverlay) return;
     mobileNavOverlay.classList.remove('open');
     mobileNavOverlay.setAttribute('aria-hidden', 'true');
     if (navHamburger) {
       navHamburger.setAttribute('aria-expanded', 'false');
-      navHamburger.focus();
+      if (restoreFocus) {
+        navHamburger.focus();
+      }
     }
     document.body.style.overflow = '';
     updateNavbarTheme();
+  }
+
+  function scrollToSection(targetId) {
+    if (targetId === '#home') {
+      window.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      });
+      return;
+    }
+
+    const targetElement = document.querySelector(targetId);
+    if (!targetElement) return;
+
+    const navOffset = (navbar ? navbar.offsetHeight : 70) + 16;
+    const targetTop = targetElement.getBoundingClientRect().top + window.scrollY - navOffset;
+
+    window.scrollTo({
+      top: Math.max(0, Math.round(targetTop)),
+      behavior: prefersReducedMotion ? 'auto' : 'smooth'
+    });
   }
 
   function openMobileNav() {
@@ -1034,23 +1057,53 @@ document.addEventListener('DOMContentLoaded', () => {
     navHamburger.addEventListener('click', () => {
       const isOpen = mobileNavOverlay.classList.contains('open');
       if (isOpen) {
-        closeMobileNav();
+        closeMobileNav({ restoreFocus: true });
       } else {
         openMobileNav();
       }
     });
 
     if (mobileNavClose) {
-      mobileNavClose.addEventListener('click', closeMobileNav);
+      mobileNavClose.addEventListener('click', () => {
+        closeMobileNav({ restoreFocus: true });
+      });
     }
 
     mobileNavOverlay.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', closeMobileNav);
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (!href) return;
+
+        if (href.startsWith('#')) {
+          e.preventDefault();
+          const targetId = href;
+
+          // 1. Close mobile nav immediately without stealing focus back to hamburger
+          closeMobileNav({ restoreFocus: false });
+
+          // 2. Perform smooth scroll in animation frame to ensure document overflow unlocked
+          requestAnimationFrame(() => {
+            scrollToSection(targetId);
+
+            if (history.pushState) {
+              history.pushState(null, '', targetId);
+            } else {
+              window.location.hash = targetId;
+            }
+
+            updateActiveNavPill();
+            updateNavbarTheme();
+          });
+        } else {
+          // External or mailto link
+          closeMobileNav({ restoreFocus: false });
+        }
+      });
     });
 
     mobileNavOverlay.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        closeMobileNav();
+        closeMobileNav({ restoreFocus: true });
       }
     });
   }
@@ -1174,10 +1227,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const href = pill.getAttribute('href');
       if (href === `#${currentSectionId}` || (!currentSectionId && (href === '#home' || href === '#'))) {
         pill.classList.add('active');
+        pill.setAttribute('aria-current', 'page');
       } else {
         pill.classList.remove('active');
+        pill.removeAttribute('aria-current');
       }
     });
+
+    if (mobileNavOverlay) {
+      const mobileLinks = mobileNavOverlay.querySelectorAll('.mobile-nav-links a');
+      mobileLinks.forEach((link) => {
+        const href = link.getAttribute('href');
+        if (href === `#${currentSectionId}` || (!currentSectionId && (href === '#home' || href === '#'))) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'page');
+        } else {
+          link.classList.remove('active');
+          link.removeAttribute('aria-current');
+        }
+      });
+    }
   }
 
   // ============================================================
