@@ -56,8 +56,11 @@ describe('Responsiveness, Accessibility & Motion Verification', () => {
     assert.ok(css.includes('@media (max-width: 480px)'), 'Must include 480px small smartphone breakpoint');
     assert.ok(css.includes('@media (max-width: 360px)'), 'Must include 360px compact phone breakpoint');
 
-    // Touch-action on swipe container
-    assert.ok(css.includes('touch-action: pan-y !important;'), 'Horizontal gallery must allow vertical pan gesture');
+    // Touch-action on swipe container allowing horizontal swipe and vertical pan
+    assert.ok(
+      css.includes('touch-action: pan-x pan-y !important;') || css.includes('touch-action: pan-y pan-x !important;'),
+      'Horizontal gallery must allow horizontal swiping and vertical pan gestures'
+    );
   });
 
   test('Mobile interactive elements satisfy 44px minimum touch targets', () => {

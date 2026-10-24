@@ -580,7 +580,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isMobileLayout() || prefersReducedMotion) {
       projectsPinSection.style.height = 'auto';
       projectsCarousel.style.transform = 'none';
-      if (projectsProgressBar) projectsProgressBar.style.width = '100%';
+      if (projectsProgressBar) {
+        const totalCards = portfolioData?.projects?.length || 5;
+        const maxScroll = projectsWindow ? (projectsWindow.scrollWidth - projectsWindow.clientWidth) : 0;
+        const scrollLeft = projectsWindow ? projectsWindow.scrollLeft : 0;
+        const pct = maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : (activeCardIndex / Math.max(1, totalCards - 1)) * 100;
+        projectsProgressBar.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+      }
       return;
     }
 
@@ -833,14 +839,20 @@ document.addEventListener('DOMContentLoaded', () => {
           let closestIdx = 0;
           let minDistance = Infinity;
 
-          cards.forEach((card, idx) => {
-            const cardLeft = card.offsetLeft;
-            const diff = Math.abs(cardLeft - scrollLeft);
-            if (diff < minDistance) {
-              minDistance = diff;
-              closestIdx = idx;
-            }
-          });
+          if (scrollLeft <= 10) {
+            closestIdx = 0;
+          } else if (maxScroll > 0 && scrollLeft >= maxScroll - 15) {
+            closestIdx = cards.length - 1;
+          } else {
+            cards.forEach((card, idx) => {
+              const cardLeft = card.offsetLeft;
+              const diff = Math.abs(cardLeft - scrollLeft);
+              if (diff < minDistance) {
+                minDistance = diff;
+                closestIdx = idx;
+              }
+            });
+          }
 
           if (closestIdx !== activeCardIndex) {
             activeCardIndex = closestIdx;
@@ -983,6 +995,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================================
   // 8. Mobile Navigation Menu Toggle & Accessible Focus
   // ============================================================
+  function syncNavbarMetrics() {
+    if (!navbar) return;
+    const rect = navbar.getBoundingClientRect();
+    if (rect.height > 0) {
+      const navBottom = Math.round(rect.bottom);
+      const navHeight = Math.round(rect.height);
+      document.documentElement.style.setProperty('--navbar-bottom', `${navBottom}px`);
+      document.documentElement.style.setProperty('--navbar-height', `${navHeight}px`);
+    }
+  }
+
   function closeMobileNav() {
     if (!mobileNavOverlay) return;
     mobileNavOverlay.classList.remove('open');
@@ -992,15 +1015,18 @@ document.addEventListener('DOMContentLoaded', () => {
       navHamburger.focus();
     }
     document.body.style.overflow = '';
+    updateNavbarTheme();
   }
 
   function openMobileNav() {
     if (!mobileNavOverlay) return;
+    syncNavbarMetrics();
     mobileNavOverlay.classList.add('open');
     mobileNavOverlay.setAttribute('aria-hidden', 'false');
     if (navHamburger) navHamburger.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
-    const firstLink = mobileNavOverlay.querySelector('button, a');
+    updateNavbarTheme();
+    const firstLink = mobileNavOverlay.querySelector('.mobile-nav-links a, button');
     if (firstLink) setTimeout(() => firstLink.focus(), 60);
   }
 
@@ -1101,7 +1127,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // 11. Dynamic Section-Aware Navbar Theming (data-ground)
   // ============================================================
   function updateNavbarTheme() {
-    if (!navbar || groundSections.length === 0) return;
+    if (!navbar) return;
+
+    if (mobileNavOverlay && mobileNavOverlay.classList.contains('open')) {
+      navbar.setAttribute('data-theme', 'dark');
+      navbar.removeAttribute('data-scrolled');
+      return;
+    }
+
+    if (groundSections.length === 0) return;
     const navRect = navbar.getBoundingClientRect();
     const navMidY = navRect.top + navRect.height / 2;
     let activeGround = 'white';
@@ -1622,6 +1656,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
+      syncNavbarMetrics();
       if (window.innerWidth > 1024 && mobileNavOverlay?.classList.contains('open')) {
         closeMobileNav();
       }
@@ -1632,6 +1667,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('orientationchange', () => {
     setTimeout(() => {
+      syncNavbarMetrics();
       updateGalleryMetrics();
       updateNavbarTheme();
     }, 150);
@@ -1649,6 +1685,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Initial load & Feature activations
+  syncNavbarMetrics();
   initSplitText();
   requestAnimationFrame(() => {
     const heroEl = document.querySelector('.hero');
