@@ -1701,6 +1701,77 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================
+  // 17. Cinematic Typography Footer Interactions
+  // ============================================================
+  function initCinematicFooter() {
+    const footerHero = document.querySelector('.footer-hero-talk');
+    const portraitWrap = document.querySelector('.footer-portrait-wrap');
+    const watermarkName = document.querySelector('.footer-watermark-name');
+    if (!footerHero) return;
+
+    if ('IntersectionObserver' in window) {
+      const footerObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              footerHero.classList.add('is-revealed');
+              footerObserver.unobserve(footerHero);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      footerObserver.observe(footerHero);
+    } else {
+      footerHero.classList.add('is-revealed');
+    }
+
+    if (prefersReducedMotion || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      return;
+    }
+
+    let targetShiftX = 0, targetShiftY = 0;
+    let currentShiftX = 0, currentShiftY = 0;
+    let footerRafId = null;
+
+    function renderFooterParallax() {
+      const dx = targetShiftX - currentShiftX;
+      const dy = targetShiftY - currentShiftY;
+      if (Math.abs(dx) > 0.05 || Math.abs(dy) > 0.05) {
+        currentShiftX += dx * 0.12;
+        currentShiftY += dy * 0.12;
+        if (portraitWrap) {
+          portraitWrap.style.transform = `translate3d(${currentShiftX * 14}px, ${currentShiftY * 8}px, 0)`;
+        }
+        if (watermarkName) {
+          watermarkName.style.transform = `translate3d(${-currentShiftX * 22}px, ${-currentShiftY * 10}px, 0)`;
+        }
+        footerRafId = requestAnimationFrame(renderFooterParallax);
+      } else {
+        footerRafId = null;
+      }
+    }
+
+    footerHero.addEventListener('pointermove', (e) => {
+      const rect = footerHero.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      targetShiftX = ((e.clientX - rect.left) / rect.width) - 0.5;
+      targetShiftY = ((e.clientY - rect.top) / rect.height) - 0.5;
+      if (!footerRafId) {
+        footerRafId = requestAnimationFrame(renderFooterParallax);
+      }
+    }, { passive: true });
+
+    footerHero.addEventListener('pointerleave', () => {
+      targetShiftX = 0;
+      targetShiftY = 0;
+      if (!footerRafId) {
+        footerRafId = requestAnimationFrame(renderFooterParallax);
+      }
+    });
+  }
+
+  // ============================================================
   // Consolidated Scroll Loop (requestAnimationFrame)
   // ============================================================
   window.addEventListener(
@@ -1762,6 +1833,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   initSkillsPhysics();
   initTalkCursor();
+  initCinematicFooter();
   updateNavbarTheme();
   updateActiveNavPill();
   loadPortfolio();
