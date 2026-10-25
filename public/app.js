@@ -1706,6 +1706,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function initCinematicFooter() {
     const footerHero = document.querySelector('.footer-hero-talk');
     const portraitWrap = document.querySelector('.footer-portrait-wrap');
+    const portraitAura = document.querySelector('.footer-portrait-aura');
     const watermarkName = document.querySelector('.footer-watermark-name');
     if (!footerHero) return;
 
@@ -1742,6 +1743,9 @@ document.addEventListener('DOMContentLoaded', () => {
         currentShiftY += dy * 0.12;
         if (portraitWrap) {
           portraitWrap.style.transform = `translate3d(${currentShiftX * 14}px, ${currentShiftY * 8}px, 0)`;
+        }
+        if (portraitAura) {
+          portraitAura.style.transform = `translateX(-50%) translate3d(${currentShiftX * 8}px, ${currentShiftY * 5}px, 0)`;
         }
         if (watermarkName) {
           watermarkName.style.transform = `translate3d(${-currentShiftX * 22}px, ${-currentShiftY * 10}px, 0)`;
