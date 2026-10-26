@@ -3122,8 +3122,16 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   font-size: clamp(10rem, 17vw, 17rem);
   line-height: 0.72;
   letter-spacing: 0.035em;
-  color: rgba(255, 255, 255, 0.018);
-  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.045);
+  color: rgba(255, 255, 255, 0.065);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.11) 0%,
+    rgba(255, 255, 255, 0.05) 60%,
+    rgba(255, 208, 0, 0.03) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.16);
   user-select: none;
   white-space: nowrap;
   transform: translate(2%, 0);
@@ -3333,25 +3341,25 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
 }
 .footer-portrait-aura {
   position: absolute;
-  top: 5%;
+  top: 6%;
   left: 50%;
   transform: translateX(-50%);
   width: 135%;
   height: 115%;
   border-radius: 50%;
   background: 
-    radial-gradient(ellipse 55% 50% at 50% 50%, rgba(255, 208, 0, 0.14) 0%, rgba(245, 166, 35, 0.07) 32%, rgba(212, 175, 55, 0.02) 58%, transparent 72%),
-    radial-gradient(circle at 50% 40%, rgba(255, 225, 120, 0.09) 0%, rgba(255, 190, 0, 0.03) 40%, transparent 68%);
-  filter: blur(28px);
+    radial-gradient(ellipse 65% 55% at 50% 42%, rgba(255, 215, 130, 0.09) 0%, rgba(255, 185, 60, 0.035) 40%, transparent 72%),
+    radial-gradient(circle at 50% 48%, rgba(65, 90, 220, 0.06) 0%, rgba(46, 12, 255, 0.02) 52%, transparent 76%);
+  filter: blur(52px);
   pointer-events: none;
   z-index: 1;
-  opacity: 0.92;
-  animation: footerAuraPulse 7s ease-in-out infinite alternate;
+  opacity: 0.88;
+  animation: footerAuraPulse 8s ease-in-out infinite alternate;
   will-change: transform, opacity;
 }
 @keyframes footerAuraPulse {
-  0% { transform: translateX(-50%) scale(0.96) translate3d(0, 4px, 0); opacity: 0.84; }
-  100% { transform: translateX(-50%) scale(1.04) translate3d(0, -4px, 0); opacity: 1; }
+  0% { transform: translateX(-50%) scale(0.98) translate3d(0, 3px, 0); opacity: 0.82; }
+  100% { transform: translateX(-50%) scale(1.02) translate3d(0, -3px, 0); opacity: 0.94; }
 }
 .footer-portrait-wrap {
   position: relative;
@@ -3364,6 +3372,50 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   z-index: 2;
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
+  /* Gentle vertical bottom fade: face, collar & tie knot stay 100% sharp; lower chest & cutoffs softly dissolve into footer base */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 66%,
+    rgba(0, 0, 0, 0.94) 76%,
+    rgba(0, 0, 0, 0.6) 86%,
+    rgba(0, 0, 0, 0.15) 94%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 66%,
+    rgba(0, 0, 0, 0.94) 76%,
+    rgba(0, 0, 0, 0.6) 86%,
+    rgba(0, 0, 0, 0.15) 94%,
+    transparent 100%
+  );
+}
+.footer-portrait-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  /* Chiaroscuro studio shadow: strictly confined to the portrait silhouette so transparent pixels stay 100% transparent */
+  background: linear-gradient(
+    to top,
+    #090a0d 0%,
+    #090a0d 12%,
+    rgba(9, 10, 13, 0.85) 24%,
+    rgba(9, 10, 13, 0.4) 36%,
+    transparent 52%
+  );
+  mix-blend-mode: multiply;
+  -webkit-mask-image: url('/images/footer_image.png');
+  mask-image: url('/images/footer_image.png');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: bottom center;
+  mask-position: bottom center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 }
 .footer-portrait-img {
   width: 100%;
@@ -3372,12 +3424,36 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   object-position: bottom center !important;
   display: block;
   pointer-events: none;
+  /* Controlled horizontal side feathering: eliminates straight-edge arm cutoffs without touching face or hair */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.4) 3%,
+    rgba(0, 0, 0, 0.85) 6%,
+    #000 12%,
+    #000 88%,
+    rgba(0, 0, 0, 0.85) 94%,
+    rgba(0, 0, 0, 0.4) 97%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.4) 3%,
+    rgba(0, 0, 0, 0.85) 6%,
+    #000 12%,
+    #000 88%,
+    rgba(0, 0, 0, 0.85) 94%,
+    rgba(0, 0, 0, 0.4) 97%,
+    transparent 100%
+  );
+  /* Editorial grading: subtle rim lighting & natural grounded depth without harsh outlines */
   filter: 
-    drop-shadow(0 16px 32px rgba(0, 0, 0, 0.85)) 
-    drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
-  mask-image: none !important;
-  -webkit-mask-image: none !important;
-  clip-path: none !important;
+    contrast(1.02) 
+    brightness(0.99)
+    drop-shadow(0 0 12px rgba(255, 220, 150, 0.08))
+    drop-shadow(0 0 26px rgba(60, 90, 180, 0.05))
+    drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
   transition: filter 0.4s ease;
 }
 
@@ -4023,7 +4099,7 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   .footer-hero-talk { min-height: 330px; margin-bottom: 20px; }
   .footer-portrait-stage { width: 310px; height: 330px; right: 0; bottom: 0; }
   .footer-portrait-wrap { width: 310px; height: 330px; }
-  .footer-portrait-aura { width: 130%; height: 110%; filter: blur(24px); }
+  .footer-portrait-aura { width: 130%; height: 110%; filter: blur(42px); }
   .footer-watermark-name { font-size: 13rem; }
   .footer-grid { grid-template-columns: 1fr; gap: 24px; }
   .footer-links-group {
@@ -4204,8 +4280,8 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
     width: 125%;
     height: 105%;
     top: 6%;
-    filter: blur(24px);
-    opacity: 0.88;
+    filter: blur(36px);
+    opacity: 0.82;
   }
   .footer-portrait-wrap {
     width: 100%;
@@ -4254,8 +4330,15 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   .footer-watermark-name {
     font-size: clamp(6.5rem, 24vw, 11rem);
     transform: none;
-    color: rgba(255, 255, 255, 0.022);
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.035);
+    color: rgba(255, 255, 255, 0.065);
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.10) 0%,
+      rgba(255, 255, 255, 0.04) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.14);
   }
   .footer-divider {
     height: 1px;

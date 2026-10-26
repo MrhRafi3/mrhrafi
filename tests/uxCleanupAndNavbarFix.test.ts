@@ -459,4 +459,83 @@ describe('UX Cleanup & Bug Fix Pass Verification', () => {
       );
     });
   });
+
+  // =========================================================================
+  // TASK 5: EDITORIAL FOOTER PORTRAIT INTEGRATION
+  // =========================================================================
+  describe('Task 5 — Editorial Footer Portrait Integration', () => {
+    test('Portrait markup structure is properly defined with stage, aura, wrap, and image', () => {
+      assert.ok(html.includes('class="footer-portrait-stage"'), 'Stage element must exist in index.html');
+      assert.ok(html.includes('class="footer-portrait-aura"'), 'Aura element must exist in index.html');
+      assert.ok(html.includes('class="footer-portrait-wrap"'), 'Wrap container must exist in index.html');
+      assert.ok(html.includes('class="footer-portrait-img"'), 'Portrait image must exist in index.html');
+      assert.ok(html.includes('src="/images/footer_image.png"'), 'Must reference footer_image.png');
+    });
+
+    test('CSS defines dual-gradient masking for vertical bottom dissolution and horizontal arm feathering', () => {
+      // 1. Vertical bottom fade on .footer-portrait-wrap
+      assert.ok(
+        css.includes('-webkit-mask-image: linear-gradient(\n    to bottom') ||
+        css.includes('mask-image: linear-gradient(\n    to bottom') ||
+        css.includes('to bottom,\n    #000 0%'),
+        'Wrap must define to-bottom mask gradient for smooth bottom fade'
+      );
+
+      // 2. Horizontal arm feathering on .footer-portrait-img
+      assert.ok(
+        css.includes('to right,\n    transparent 0%') ||
+        css.includes('to right, transparent 0%') ||
+        css.includes('to right,\n    transparent'),
+        'Image must define to-right mask gradient to eliminate straight arm cutoffs'
+      );
+
+      // 3. No blunt mask-image: none !important overrides
+      assert.ok(
+        !css.includes('mask-image: none !important'),
+        'Must remove obsolete mask-image: none !important overrides'
+      );
+    });
+
+    test('CSS applies chiaroscuro tonal darkening to prevent foggy or ghosted white shirt fade', () => {
+      assert.ok(
+        css.includes('.footer-portrait-wrap::after'),
+        'Wrap must have ::after pseudo-element for shadow overlay'
+      );
+      assert.ok(
+        css.includes('mix-blend-mode: multiply'),
+        'Shadow overlay must use mix-blend-mode: multiply to blend fabric into footer base'
+      );
+      assert.ok(
+        css.includes('#090a0d'),
+        'Shadow overlay must use exact footer obsidian color #090a0d'
+      );
+    });
+
+    test('Atmospheric background aura uses diffuse studio backlighting without harsh oval borders', () => {
+      assert.ok(
+        css.includes('.footer-portrait-aura'),
+        'CSS must define .footer-portrait-aura styling'
+      );
+      assert.ok(
+        css.includes('filter: blur(52px)') || css.includes('filter: blur(48px)'),
+        'Aura must use deep blur (>= 48px) to eliminate hard oval contours'
+      );
+      assert.ok(
+        css.includes('animation: footerAuraPulse'),
+        'Aura must have subtle breathing pulse animation'
+      );
+      assert.ok(
+        css.includes('.footer-portrait-aura,\n  .footer-kicker-dot') ||
+        css.includes('.footer-portrait-aura,'),
+        'prefers-reduced-motion must safely disable aura animation'
+      );
+    });
+
+    test('Responsive portrait geometry rules are preserved across all breakpoints', () => {
+      assert.ok(css.includes('@media (max-width: 1024px)'), '1024px tablet breakpoint must be handled');
+      assert.ok(css.includes('@media (max-width: 768px)'), '768px mobile breakpoint must be handled');
+      assert.ok(css.includes('@media (max-width: 480px)'), '480px phone breakpoint must be handled');
+      assert.ok(css.includes('@media (max-width: 360px)'), '360px small phone breakpoint must be handled');
+    });
+  });
 });
