@@ -36,7 +36,7 @@ describe('Vercel Serverless Entry Point & Routing Verification', () => {
       assert.ok(text.includes('Mrh Rafi'), 'Root response must include developer name');
       assert.ok(text.includes('id="projects"'), 'Root response must include projects section');
     } finally {
-      server.close();
+      await new Promise<void>((resolve) => server.close(() => resolve()));
     }
   });
 
@@ -61,7 +61,7 @@ describe('Vercel Serverless Entry Point & Routing Verification', () => {
       const portData = await portRes.json();
       assert.equal(portData.name, 'Mrh Rafi');
     } finally {
-      server.close();
+      await new Promise<void>((resolve) => server.close(() => resolve()));
     }
   });
 

@@ -35,6 +35,67 @@
   <!-- ======================== SKIP LINK ======================== -->
   <a href="#main-content" class="skip-to-content">Skip to main content</a>
 
+  <!-- ======================== CINEMATIC OPENING SEQUENCE ======================== -->
+  <aside class="cinematic-intro" id="cinematic-intro" aria-label="Cinematic Opening Sequence">
+    <div class="cinematic-intro-stage">
+      <!-- Background Ambient Layers -->
+      <div class="cinematic-intro-bg" aria-hidden="true">
+        <div class="intro-ambient-glow intro-glow--top"></div>
+        <div class="intro-ambient-glow intro-glow--bottom"></div>
+        <div class="intro-light-beam intro-beam--1"></div>
+        <div class="intro-light-beam intro-beam--2"></div>
+        <div class="intro-light-beam intro-beam--3"></div>
+      </div>
+
+      <!-- Accessible Skip Intro Control -->
+      <button type="button" class="intro-skip-btn" id="intro-skip-btn" aria-label="Skip introductory sequence">
+        <span class="intro-skip-text">Skip</span>
+        <span class="intro-skip-arrow" aria-hidden="true">➔</span>
+      </button>
+
+      <!-- Center Cinematic Content -->
+      <div class="intro-center-wrap">
+        <!-- Subtly revealed portrait vignette with golden-blue aura -->
+        <div class="intro-portrait-stage" aria-hidden="true">
+          <div class="intro-portrait-aura"></div>
+          <div class="intro-portrait-mask">
+            <img 
+              src="/images/rafi-portrait.jpg" 
+              alt="" 
+              class="intro-portrait-img" 
+              loading="eager"
+            />
+          </div>
+        </div>
+
+        <!-- Series / Identity Badge -->
+        <div class="intro-badge">
+          <span class="intro-badge-dot" aria-hidden="true"></span>
+          <span class="intro-badge-text">PORTFOLIO · 2026</span>
+        </div>
+
+        <!-- Monumental Typography -->
+        <h1 class="intro-title" aria-label="Mrh Rafi">
+          <span class="intro-title-line">
+            <span class="intro-char-block">MRH RAFI</span>
+          </span>
+        </h1>
+
+        <!-- Professional Subtitle -->
+        <p class="intro-subtitle">
+          <span class="intro-sub-item">Flutter App Developer</span>
+          <span class="intro-sub-sep" aria-hidden="true">·</span>
+          <span class="intro-sub-item">Mobile UI Engineer</span>
+        </p>
+
+        <!-- Subtle Progress Line Indicator -->
+        <div class="intro-timeline-track" aria-hidden="true">
+          <div class="intro-timeline-fill" id="intro-timeline-fill"></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
   <!-- ======================== NAVBAR ======================== -->
   <header class="navbar" id="navbar" role="banner">
     <div class="nav-inner">
@@ -49,8 +110,8 @@
         <a href="#faq" class="nav-pill">FAQ</a>
         <a href="#contact" class="nav-pill">Contact</a>
       </nav>
-      <a href="#contact" class="nav-cta-btn">
-        <span class="nav-cta-emoji" aria-hidden="true">👋</span> Let's talk
+      <a href="#contact" class="nav-cta-btn" id="nav-cta">
+        <span class="nav-cta-emoji" aria-hidden="true">👋</span> Get in touch
       </a>
       <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav-overlay">
         <span></span><span></span><span></span>
@@ -72,7 +133,7 @@
       <a href="#contact">Contact</a>
     </nav>
     <div class="mobile-nav-actions">
-      <a href="#contact" class="btn btn-white">Let's talk</a>
+      <a href="#contact" class="btn btn-white">Get in touch</a>
       <a href="mailto:mrhrafi99@gmail.com" class="btn btn-outline-white">Send email</a>
     </div>
   </div>
@@ -80,6 +141,15 @@
   <main id="main-content" tabindex="-1">
     <!-- ======================== HERO ======================== -->
     <section class="hero" data-ground="blue" id="home">
+      <!-- Ambient Cinematic Atmosphere (Layer 0) -->
+      <div class="hero-atmosphere" aria-hidden="true">
+        <div class="hero-glow hero-glow--top"></div>
+        <div class="hero-glow hero-glow--bottom"></div>
+        <div class="hero-light-streak hero-streak--1"></div>
+        <div class="hero-light-streak hero-streak--2"></div>
+        <div class="hero-light-streak hero-streak--3"></div>
+      </div>
+
       <div class="hero-container">
         <div class="hero-content">
           <div class="hero-kicker-pill">
@@ -95,7 +165,7 @@
           <p class="hero-description">
             I'm Mrh Rafi, an independent Flutter developer and mobile UI engineer based in Dhaka, Bangladesh.
             I craft responsive, tactile mobile applications with clean architecture and robust C++ / DSA foundations —
-            with Clocky, Expify Beta, and NomNom leading my showcase. Need a dedicated mobile engineer? Let's talk.
+            with Clocky, Expify Beta, and NomNom leading my showcase.
           </p>
           <div class="hero-cta-group">
             <a href="#contact" class="btn btn-white">
@@ -104,9 +174,9 @@
             <a href="#projects" class="btn btn-ghost">Explore Projects</a>
           </div>
         </div>
-        <div class="hero-photo-wrap">
+        <div class="hero-photo-wrap" id="hero-photo-wrap">
           <div class="hero-photo-bg" aria-hidden="true"></div>
-          <div class="hero-photo-placeholder">
+          <div class="hero-photo-placeholder" id="hero-photo-card">
             <img src="/images/rafi-portrait.jpg" alt="Mrh Rafi — Flutter App Developer and Mobile UI Engineer" class="hero-photo-img" loading="eager" fetchpriority="high" onerror="this.style.display='none'" />
             <div class="hero-photo-initials" aria-hidden="true">R</div>
           </div>
@@ -116,6 +186,31 @@
               <path d="M5 35 C 15 25, 25 15, 35 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
               <path d="M28 5 L36 8 L30 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             </svg>
+          </div>
+
+          <!-- Cinematic Floating Metric Chips (Desktop depth) -->
+          <div class="hero-chip hero-chip--apps" data-depth="1.2" aria-hidden="true">
+            <span class="hero-chip-badge">✦</span>
+            <div class="hero-chip-content">
+              <span class="hero-chip-title">5 Verified Apps</span>
+              <span class="hero-chip-sub">Clocky · Expify · NomNom</span>
+            </div>
+          </div>
+
+          <div class="hero-chip hero-chip--stack" data-depth="-1.0" aria-hidden="true">
+            <span class="hero-chip-badge">⚡</span>
+            <div class="hero-chip-content">
+              <span class="hero-chip-title">Flutter &amp; Dart</span>
+              <span class="hero-chip-sub">Clean Arch · Custom Canvas</span>
+            </div>
+          </div>
+
+          <div class="hero-chip hero-chip--foundations" data-depth="0.9" aria-hidden="true">
+            <span class="hero-chip-badge">◎</span>
+            <div class="hero-chip-content">
+              <span class="hero-chip-title">C++ &amp; DSA</span>
+              <span class="hero-chip-sub">Algorithmic Foundations</span>
+            </div>
           </div>
         </div>
       </div>
@@ -174,7 +269,7 @@
               Alongside mobile development, my foundation in C++ and Data Structures &amp; Algorithms (DSA) sharpens how I break down complex logic, structure data, and solve problems with performance in mind. Based in Dhaka, working with teams and founders worldwide.
             </p>
             <div class="about-cta-row">
-              <a href="#contact" class="btn btn-primary">Let's talk</a>
+              <a href="#contact" class="btn btn-primary">Work with me</a>
               <a href="https://github.com/mrhrafi3" target="_blank" rel="noopener" class="btn btn-outline">GitHub Profile ↗</a>
             </div>
           </div>
@@ -196,6 +291,148 @@
               <span class="stat-label">years active practice</span>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================== PORTFOLIO CHAPTERS SHELF ======================== -->
+    <section class="chapters-shelf-section reveal-on-scroll" id="chapters" data-ground="white" aria-label="Portfolio Chapters">
+      <div class="container">
+        <div class="chapters-shelf-card">
+          <div class="chapters-shelf-header">
+            <div class="chapters-shelf-title-wrap">
+              <span class="chapters-shelf-tag">
+                <span class="chapters-pulse-dot" aria-hidden="true"></span>
+                SERIES ROADMAP
+              </span>
+              <h2 class="chapters-shelf-heading">Portfolio Chapters</h2>
+            </div>
+            <p class="chapters-shelf-desc">
+              Live exploration progress across the core engineering layers of this portfolio. Select any chapter to inspect.
+            </p>
+          </div>
+
+          <nav class="chapters-grid" aria-label="Portfolio chapters navigation">
+            <!-- Chapter 01: Skills -->
+            <a href="#skills" class="chapter-card" data-target="skills" aria-label="Chapter 01: Core Stack and Pillars">
+              <div class="chapter-card-top">
+                <span class="chapter-card-badge">CH 01</span>
+                <span class="chapter-progress-val" id="chap-val-skills" aria-hidden="true">0%</span>
+              </div>
+              <div class="chapter-card-body">
+                <h3 class="chapter-card-title">Core Stack &amp; Pillars</h3>
+                <p class="chapter-card-desc">Flutter craft, C++ logic &amp; clean architecture foundations.</p>
+              </div>
+              <div class="chapter-progress-track">
+                <div 
+                  class="chapter-progress-fill" 
+                  id="chap-bar-skills" 
+                  role="progressbar" 
+                  aria-valuenow="0" 
+                  aria-valuemin="0" 
+                  aria-valuemax="100" 
+                  aria-label="Core Stack and Pillars exploration progress" 
+                  style="transform: scaleX(0);"
+                ></div>
+              </div>
+            </a>
+
+            <!-- Chapter 02: Interactive Sandbox -->
+            <a href="#tags" class="chapter-card" data-target="tags" aria-label="Chapter 02: Interactive Stack Sandbox">
+              <div class="chapter-card-top">
+                <span class="chapter-card-badge">CH 02</span>
+                <span class="chapter-progress-val" id="chap-val-tags" aria-hidden="true">0%</span>
+              </div>
+              <div class="chapter-card-body">
+                <h3 class="chapter-card-title">Stack Sandbox</h3>
+                <p class="chapter-card-desc">Interactive 2D physics simulation of production tools.</p>
+              </div>
+              <div class="chapter-progress-track">
+                <div 
+                  class="chapter-progress-fill" 
+                  id="chap-bar-tags" 
+                  role="progressbar" 
+                  aria-valuenow="0" 
+                  aria-valuemin="0" 
+                  aria-valuemax="100" 
+                  aria-label="Interactive Stack Sandbox exploration progress" 
+                  style="transform: scaleX(0);"
+                ></div>
+              </div>
+            </a>
+
+            <!-- Chapter 03: Featured Projects -->
+            <a href="#projects" class="chapter-card" data-target="projects" aria-label="Chapter 03: Featured Projects and Case Studies">
+              <div class="chapter-card-top">
+                <span class="chapter-card-badge">CH 03</span>
+                <span class="chapter-progress-val" id="chap-val-projects" aria-hidden="true">0%</span>
+              </div>
+              <div class="chapter-card-body">
+                <h3 class="chapter-card-title">Featured Projects</h3>
+                <p class="chapter-card-desc">Case studies across Clocky, Expify, NomNom, Alchemy &amp; AEVIQUE.</p>
+              </div>
+              <div class="chapter-progress-track">
+                <div 
+                  class="chapter-progress-fill" 
+                  id="chap-bar-projects" 
+                  role="progressbar" 
+                  aria-valuenow="0" 
+                  aria-valuemin="0" 
+                  aria-valuemax="100" 
+                  aria-label="Featured Projects exploration progress" 
+                  style="transform: scaleX(0);"
+                ></div>
+              </div>
+            </a>
+
+            <!-- Chapter 04: Engineering Process -->
+            <a href="#process" class="chapter-card" data-target="process" aria-label="Chapter 04: Engineering Process">
+              <div class="chapter-card-top">
+                <span class="chapter-card-badge">CH 04</span>
+                <span class="chapter-progress-val" id="chap-val-process" aria-hidden="true">0%</span>
+              </div>
+              <div class="chapter-card-body">
+                <h3 class="chapter-card-title">Engineering Process</h3>
+                <p class="chapter-card-desc">Four-stage methodology from discovery to production deploy.</p>
+              </div>
+              <div class="chapter-progress-track">
+                <div 
+                  class="chapter-progress-fill" 
+                  id="chap-bar-process" 
+                  role="progressbar" 
+                  aria-valuenow="0" 
+                  aria-valuemin="0" 
+                  aria-valuemax="100" 
+                  aria-label="Engineering Process exploration progress" 
+                  style="transform: scaleX(0);"
+                ></div>
+              </div>
+            </a>
+
+            <!-- Chapter 05: Contact & Collaboration -->
+            <a href="#contact" class="chapter-card" data-target="contact" aria-label="Chapter 05: Contact and Collaboration">
+              <div class="chapter-card-top">
+                <span class="chapter-card-badge">CH 05</span>
+                <span class="chapter-progress-val" id="chap-val-contact" aria-hidden="true">0%</span>
+              </div>
+              <div class="chapter-card-body">
+                <h3 class="chapter-card-title">Start Conversation</h3>
+                <p class="chapter-card-desc">Direct inquiries, active availability &amp; remote collaboration.</p>
+              </div>
+              <div class="chapter-progress-track">
+                <div 
+                  class="chapter-progress-fill" 
+                  id="chap-bar-contact" 
+                  role="progressbar" 
+                  aria-valuenow="0" 
+                  aria-valuemin="0" 
+                  aria-valuemax="100" 
+                  aria-label="Contact and Collaboration exploration progress" 
+                  style="transform: scaleX(0);"
+                ></div>
+              </div>
+            </a>
+          </nav>
         </div>
       </div>
     </section>
@@ -315,12 +552,15 @@
       <div class="container">
         <span class="section-label">interactive stack exploration</span>
         <h2 class="section-heading" data-split>Everything your app needs</h2>
-        <p class="section-subtext">Every application is custom-crafted with clean boundaries.</p>
+        <p class="section-subtext">Go on, throw them around. Every layer is custom-crafted with clean boundaries.</p>
         
         <div class="skills-physics-card" id="skills-physics-wrap">
           <div class="skills-physics-header">
             <div class="skills-physics-badge" id="skills-physics-badge">
               <span class="skills-physics-dot"></span> go on, throw them around
+            </div>
+            <div class="skills-physics-hint" aria-hidden="true">
+              <span class="skills-hint-icon">✦</span> Drag, throw &amp; explore
             </div>
           </div>
           
@@ -329,31 +569,31 @@
           
           <!-- Real HTML Skill Pills — GUARANTEED VISIBLE -->
           <div class="skills-pills-wrap" id="skills-pills-container">
-            <div class="skill-pill" data-skill="Flutter">
+            <div class="skill-pill skill-pill--flutter" data-skill="Flutter">
               <span class="skill-pill-bullet"></span>Flutter
             </div>
-            <div class="skill-pill" data-skill="Dart">
+            <div class="skill-pill skill-pill--dart" data-skill="Dart">
               <span class="skill-pill-bullet"></span>Dart
             </div>
-            <div class="skill-pill" data-skill="Riverpod">
+            <div class="skill-pill skill-pill--riverpod" data-skill="Riverpod">
               <span class="skill-pill-bullet"></span>Riverpod
             </div>
-            <div class="skill-pill" data-skill="C++">
+            <div class="skill-pill skill-pill--cpp" data-skill="C++">
               <span class="skill-pill-bullet"></span>C++
             </div>
-            <div class="skill-pill" data-skill="Data Structures &amp; Algorithms">
+            <div class="skill-pill skill-pill--dsa" data-skill="Data Structures &amp; Algorithms">
               <span class="skill-pill-bullet"></span>Data Structures &amp; Algorithms
             </div>
-            <div class="skill-pill" data-skill="Custom Canvas">
+            <div class="skill-pill skill-pill--canvas" data-skill="Custom Canvas">
               <span class="skill-pill-bullet"></span>Custom Canvas
             </div>
-            <div class="skill-pill" data-skill="SQLite">
+            <div class="skill-pill skill-pill--sqlite" data-skill="SQLite">
               <span class="skill-pill-bullet"></span>SQLite
             </div>
-            <div class="skill-pill" data-skill="REST APIs">
+            <div class="skill-pill skill-pill--apis" data-skill="REST APIs">
               <span class="skill-pill-bullet"></span>REST APIs
             </div>
-            <div class="skill-pill" data-skill="Git &amp; GitHub">
+            <div class="skill-pill skill-pill--git" data-skill="Git &amp; GitHub">
               <span class="skill-pill-bullet"></span>Git &amp; GitHub
             </div>
           </div>
@@ -388,16 +628,7 @@
             </div>
           </div>
 
-          <div class="enrich-bar">
-            <input type="url" id="custom-url-input"
-              placeholder="Paste any live URL or repo to enrich it via Context.dev" />
-            <button id="enrich-btn" class="btn btn-primary">
-              <span>⚡</span> Enrich URL
-            </button>
-          </div>
-          <div id="enrich-loading" class="loading-indicator hidden">
-            <div class="spinner"></div> Fetching live data via Context.dev Scrape API…
-          </div>
+
 
           <!-- Horizontal Track Window -->
           <div class="projects-horizontal-window" id="projects-window" role="region" aria-roledescription="carousel" aria-label="Featured Projects">
@@ -570,7 +801,7 @@
             <a href="https://bd.linkedin.com/in/mrhrafi" target="_blank" rel="noopener" class="contact-social-pill">
               <span>LinkedIn (mrhrafi) ↗</span>
             </a>
-          </div>n
+          </div>
         </div>
 
         <div class="final-cta-buttons">
@@ -586,15 +817,14 @@
   <!-- ======================== STICKY BOTTOM CTA ======================== -->
   <div class="sticky-bottom-cta" id="sticky-cta">
     <a href="#contact" class="sticky-cta-link">
-      <span>Let's talk.</span>
-      <span class="sticky-cta-main">Get in touch</span>
-      <span>Let's talk</span>
+      <span class="sticky-cta-main">Get in touch <span class="btn-arrow" aria-hidden="true">↗</span></span>
     </a>
   </div>
 
   <!-- ======================== PROJECT DETAIL MODAL ======================== -->
   <div class="project-modal-backdrop" id="project-modal-backdrop" aria-hidden="true">
     <div class="project-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-project-title">
+      <div id="modal-live-announcer" class="sr-only" aria-live="polite"></div>
       <button class="project-modal-close" id="modal-close-btn" aria-label="Close project showcase">✕</button>
       <div class="project-modal-content" id="modal-content-area">
         <!-- Dynamically rendered by app.js -->
@@ -621,10 +851,10 @@
             <span class="footer-kicker-sub">2026</span>
           </div>
 
-          <a href="#contact" class="footer-talk-link" aria-label="Let's talk — Jump to contact section">
+          <a href="#contact" class="footer-talk-link" aria-label="Say hello — Jump to contact section">
             <span class="footer-talk-heading">
-              <span class="footer-talk-line footer-talk-lets">LET'S</span>
-              <span class="footer-talk-line footer-talk-talk">TALK</span>
+              <span class="footer-talk-line footer-talk-lets">SAY</span>
+              <span class="footer-talk-line footer-talk-talk">HELLO</span>
             </span>
             <span class="footer-arrow-wrapper" aria-hidden="true">
               <svg class="footer-gold-arrow" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -707,7 +937,6 @@
 
       <div class="footer-bottom">
         <p class="footer-copyright">© 2026 Mrh Rafi. All rights reserved.</p>
-        <p class="footer-powered">Powered by <a href="https://context.dev" target="_blank" rel="noopener">Context.dev</a></p>
       </div>
     </div>
   </footer>
@@ -716,7 +945,6 @@
   <div class="talk-cursor" id="talk-cursor" aria-hidden="true">
     <div class="talk-cursor__disc">
       <div class="talk-cursor__arrow">↗</div>
-      <span class="talk-cursor__text">LET'S TALK</span>
     </div>
   </div>
 

@@ -117,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return `
         <article class="project-card project-card--${escapeHtml(p.id)}" id="project-${escapeHtml(p.id)}" data-id="${escapeHtml(p.id)}">
+          <div class="card-glare" aria-hidden="true"></div>
           <div class="project-card-cover" role="button" tabindex="0" aria-label="Open ${escapeHtml(p.title)} showcase">
             ${
               coverSrc
@@ -133,13 +134,14 @@ document.addEventListener('DOMContentLoaded', () => {
                    </div>`
             }
             <div class="card-cover-gloss"></div>
-            <span class="project-card-category">${escapeHtml(category)}</span>
+            <span class="project-card-category"><span class="brand-tag-r" aria-hidden="true">R</span> ${escapeHtml(category)}</span>
             ${p.badge ? `<span class="project-card-badge">${escapeHtml(p.badge)}</span>` : ''}
           </div>
 
           <div class="project-card-body">
             <div class="project-card-title-row">
-              <h3 class="project-card-title">${escapeHtml(p.enriched?.resolvedTitle || p.title)}${p.accent ? `<span class="card-title-accent">${escapeHtml(p.accent)}</span>` : ''}</h3>
+              <h3 class="project-card-title">${escapeHtml(p.title)}${p.accent ? `<span class="card-title-accent">${escapeHtml(p.accent)}</span>` : ''}</h3>
+              <span class="project-card-year">2026</span>
             </div>
             
             <p class="project-card-desc">${escapeHtml(p.tagline || p.description)}</p>
@@ -147,17 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="project-card-tags">
               ${(p.tags || []).slice(0, 4).map((t) => `<span class="project-card-tag">${escapeHtml(t)}</span>`).join('')}
             </div>
-
-            ${
-              isEnriched
-                ? `
-              <div class="enriched-badge-box">
-                <div class="enriched-label">⚡ Enriched via Context.dev Scrape</div>
-                <p class="enriched-text">${escapeHtml(p.enriched.markdownExcerpt || p.enriched.description || '')}</p>
-              </div>
-            `
-                : ''
-            }
 
             <div class="project-card-footer">
               <button type="button" class="btn-card-showcase" data-id="${escapeHtml(p.id)}" aria-label="Explore ${escapeHtml(p.title)} case study">
@@ -170,9 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     ? `<a href="${escapeHtml(p.githubUrl)}" target="_blank" rel="noopener" class="project-card-link" title="Open GitHub Repository">GitHub ↗</a>`
                     : `<span class="project-card-link disabled" title="${escapeHtml(p.repoNote || 'Repository in preparation')}">Repo Soon</span>`
                 }
-                <button type="button" class="project-card-enrich" data-id="${escapeHtml(p.id)}" data-url="${escapeHtml(p.url)}" title="Live scrape metadata via Context.dev">
-                  ${isEnriched ? '⚡ Re-enrich' : '⚡ Enrich'}
-                </button>
               </div>
             </div>
           </div>
@@ -207,16 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Attach listeners to each card's enrich button
-    document.querySelectorAll('.project-card-enrich').forEach((btn) => {
-      btn.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        const targetBtn = e.currentTarget;
-        const id = targetBtn.dataset.id;
-        const url = targetBtn.dataset.url;
-        await triggerEnrich(id, url, targetBtn);
-      });
-    });
+
 
     // Handle card focus for keyboard navigation
     document.querySelectorAll('.project-card').forEach((card) => {
@@ -239,32 +218,47 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(updateGalleryMetrics, 50);
   }
 
-  // Interactive 3D Perspective Tilt for Project Cards
+  // Interactive 3D Perspective Tilt and Dynamic Glare for Project Cards (Desktop pointer-only)
   function initProjectCardTilt() {
-    if (prefersReducedMotion || window.innerWidth <= 1024) return;
+    const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (prefersReducedMotion || !hasFinePointer || window.innerWidth <= 1024) return;
+
     const cards = document.querySelectorAll('.project-card');
     cards.forEach((card) => {
       let isTicking = false;
+
       card.addEventListener('pointermove', (e) => {
         if (e.pointerType !== 'mouse') return;
         if (isTicking) return;
         isTicking = true;
+
         requestAnimationFrame(() => {
           const rect = card.getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
           const cx = rect.width / 2;
           const cy = rect.height / 2;
-          const rotX = ((cy - y) / cy) * 4.5;
-          const rotY = ((x - cx) / cx) * 4.5;
+
+          const px = Math.max(0, Math.min(100, (x / rect.width) * 100));
+          const py = Math.max(0, Math.min(100, (y / rect.height) * 100));
+
+          const rotX = ((cy - y) / cy) * 5.0;
+          const rotY = ((x - cx) / cx) * 5.0;
+
+          card.style.setProperty('--glare-x', `${px.toFixed(1)}%`);
+          card.style.setProperty('--glare-y', `${py.toFixed(1)}%`);
           card.style.transition = 'transform 0.08s ease-out, box-shadow 0.2s ease, border-color 0.2s ease';
-          card.style.transform = `perspective(1000px) translateY(-8px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.018, 1.018, 1.018)`;
+          card.style.transform = `perspective(1000px) translateY(-8px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
+
           isTicking = false;
         });
       });
+
       card.addEventListener('pointerleave', () => {
-        card.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.25s ease';
+        card.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.25s ease';
         card.style.transform = '';
+        card.style.removeProperty('--glare-x');
+        card.style.removeProperty('--glare-y');
       });
     });
   }
@@ -273,16 +267,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. Project Detail Modal
   // ============================================================
   let activeModalProject = null;
+  let activeProjectIndex = 0;
   let activeScreenIndex = 0;
   let activeModalTrigger = null;
 
   function openProjectModal(projectId) {
     if (!portfolioData || !portfolioData.projects) return;
-    const project = portfolioData.projects.find((p) => p.id === projectId);
-    if (!project) return;
+    const projectIndex = portfolioData.projects.findIndex((p) => p.id === projectId);
+    if (projectIndex === -1) return;
 
     activeModalTrigger = document.activeElement;
-    activeModalProject = project;
+    activeProjectIndex = projectIndex;
+    activeModalProject = portfolioData.projects[projectIndex];
     activeScreenIndex = 0;
     renderModalContent();
 
@@ -309,14 +305,74 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function navigateProject(direction) {
+    if (!portfolioData || !portfolioData.projects || portfolioData.projects.length === 0) return;
+    const total = portfolioData.projects.length;
+    let nextIdx = (activeProjectIndex + direction) % total;
+    if (nextIdx < 0) nextIdx += total;
+    switchToProject(nextIdx);
+  }
+
+  function switchToProject(newIndex) {
+    if (!portfolioData || !portfolioData.projects || !portfolioData.projects[newIndex]) return;
+    activeProjectIndex = newIndex;
+    activeModalProject = portfolioData.projects[newIndex];
+    activeScreenIndex = 0;
+
+    const dialog = modalBackdrop?.querySelector('.project-modal-dialog');
+    if (dialog && !prefersReducedMotion) {
+      modalContentArea.style.transition = 'opacity 0.12s ease, transform 0.14s cubic-bezier(0.16, 1, 0.3, 1)';
+      modalContentArea.style.opacity = '0.35';
+      modalContentArea.style.transform = 'translateY(6px)';
+      setTimeout(() => {
+        renderModalContent();
+        modalContentArea.style.opacity = '1';
+        modalContentArea.style.transform = 'translateY(0)';
+        dialog.scrollTop = 0;
+      }, 100);
+    } else {
+      renderModalContent();
+      if (dialog) dialog.scrollTop = 0;
+    }
+
+    const announcer = document.getElementById('modal-live-announcer');
+    if (announcer) {
+      announcer.textContent = `Showing ${activeModalProject.title} case study, project ${activeProjectIndex + 1} of ${portfolioData.projects.length}`;
+    }
+  }
+
   function renderModalContent() {
-    if (!modalContentArea || !activeModalProject) return;
+    if (!modalContentArea || !activeModalProject || !portfolioData?.projects) return;
     const p = activeModalProject;
+    const projects = portfolioData.projects;
+    const total = projects.length;
+    const prevIdx = (activeProjectIndex - 1 + total) % total;
+    const nextIdx = (activeProjectIndex + 1) % total;
+    const prevProject = projects[prevIdx];
+    const nextProject = projects[nextIdx];
+
     const screens = p.screenshots || [];
     const currentScreen = screens[activeScreenIndex] || screens[0] || { src: p.screenshotSrc, label: 'Overview' };
     const hasGithub = Boolean(p.githubUrl);
 
     modalContentArea.innerHTML = `
+      <!-- Top Navigation & Brand Bar -->
+      <div class="modal-header-nav">
+        <div class="modal-header-brand">
+          <span class="modal-header-brand-badge">R</span>
+          <span>RAFI ORIGINAL · ${escapeHtml(p.platform || 'Flutter Mobile Application')}</span>
+        </div>
+        <div class="modal-nav-controls" role="group" aria-label="Project switcher">
+          <button type="button" class="modal-nav-btn modal-nav-btn--prev" id="modal-nav-prev" title="Switch to ${escapeHtml(prevProject.title)}" aria-label="Previous project: ${escapeHtml(prevProject.title)}">
+            ← <span class="modal-nav-btn-text">Prev</span>
+          </button>
+          <span class="modal-nav-counter" aria-hidden="true">${String(activeProjectIndex + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}</span>
+          <button type="button" class="modal-nav-btn modal-nav-btn--next" id="modal-nav-next" title="Switch to ${escapeHtml(nextProject.title)}" aria-label="Next project: ${escapeHtml(nextProject.title)}">
+            <span class="modal-nav-btn-text">Next</span> →
+          </button>
+        </div>
+      </div>
+
       <div class="modal-grid">
         <!-- Left: Phone Device Showcase & Screenshot Switcher -->
         <div class="modal-media-col">
@@ -416,18 +472,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
 
-          ${
-            p.enriched
-              ? `
-            <div class="modal-enriched-box">
-              <div class="enriched-label">⚡ Live Context.dev Scrape Intelligence</div>
-              <p>${escapeHtml(p.enriched.markdownExcerpt || p.enriched.description || '')}</p>
-              <small class="enriched-meta">Scraped at ${escapeHtml(p.enriched.lastUpdated || '')}</small>
-            </div>
-          `
-              : ''
-          }
-
           <div class="modal-actions-row">
             ${
               hasGithub
@@ -445,13 +489,36 @@ document.addEventListener('DOMContentLoaded', () => {
             <a href="https://github.com/mrhrafi3" target="_blank" rel="noopener" class="btn btn-outline">
               Author Profile ↗
             </a>
-            <button class="btn btn-ghost modal-enrich-trigger" data-id="${escapeHtml(p.id)}" data-url="${escapeHtml(p.url)}">
-              ⚡ Enrich via Context.dev
-            </button>
           </div>
         </div>
       </div>
+
+      <!-- Bottom Next / Previous Case Study Switcher -->
+      <div class="modal-bottom-switcher">
+        <button type="button" class="modal-switch-card modal-switch-card--prev" data-switch-dir="-1" aria-label="Previous project: ${escapeHtml(prevProject.title)}">
+          <span class="switch-label">← Previous Case Study</span>
+          <span class="switch-title">${escapeHtml(prevProject.title)}</span>
+        </button>
+        <button type="button" class="modal-switch-card modal-switch-card--next" data-switch-dir="1" aria-label="Next project: ${escapeHtml(nextProject.title)}">
+          <span class="switch-label">Next Case Study →</span>
+          <span class="switch-title">${escapeHtml(nextProject.title)}</span>
+        </button>
+      </div>
     `;
+
+    // Top nav buttons
+    const navPrevBtn = modalContentArea.querySelector('#modal-nav-prev');
+    const navNextBtn = modalContentArea.querySelector('#modal-nav-next');
+    if (navPrevBtn) navPrevBtn.addEventListener('click', () => navigateProject(-1));
+    if (navNextBtn) navNextBtn.addEventListener('click', () => navigateProject(1));
+
+    // Bottom switcher cards
+    modalContentArea.querySelectorAll('.modal-switch-card').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const dir = parseInt(btn.dataset.switchDir, 10);
+        if (!isNaN(dir)) navigateProject(dir);
+      });
+    });
 
     // Smooth in-place screenshot switcher (preserves dialog focus and scroll position)
     function switchModalScreen(idx) {
@@ -492,21 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Listener for modal enrich trigger
-    const modalEnrichBtn = modalContentArea.querySelector('.modal-enrich-trigger');
-    if (modalEnrichBtn) {
-      modalEnrichBtn.addEventListener('click', async (e) => {
-        const id = modalEnrichBtn.dataset.id;
-        const url = modalEnrichBtn.dataset.url;
-        await triggerEnrich(id, url, modalEnrichBtn);
-        // Refresh modal with enriched data
-        const updated = portfolioData.projects.find((pr) => pr.id === id);
-        if (updated) {
-          activeModalProject = updated;
-          renderModalContent();
-        }
-      });
-    }
+
   }
 
   // Modal close events
@@ -547,8 +600,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modalBackdrop?.classList.contains('is-open')) {
+    if (!modalBackdrop?.classList.contains('is-open')) return;
+    if (e.key === 'Escape') {
       closeProjectModal();
+    } else if (e.key === 'ArrowRight') {
+      navigateProject(1);
+    } else if (e.key === 'ArrowLeft') {
+      navigateProject(-1);
     }
   });
 
@@ -946,24 +1004,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Custom URL enrich button listener
-  if (enrichBtn && customUrlInput) {
-    enrichBtn.addEventListener('click', async () => {
-      const url = customUrlInput.value.trim();
-      if (!url) {
-        alert('Please enter a valid URL.');
-        return;
-      }
-      await triggerEnrich(null, url, enrichBtn);
-      customUrlInput.value = '';
-    });
 
-    customUrlInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        enrichBtn.click();
-      }
-    });
-  }
 
   // ============================================================
   // 7. FAQ Accordion Interaction
@@ -1020,8 +1061,94 @@ document.addEventListener('DOMContentLoaded', () => {
     updateNavbarTheme();
   }
 
+  // Navigation Section Tracking Configuration
+  const navTrackedSections = [
+    { id: 'home', el: document.getElementById('home'), targetNav: 'home' },
+    { id: 'about', el: document.getElementById('about'), targetNav: 'about' },
+    { id: 'chapters', el: document.getElementById('chapters'), targetNav: 'about' },
+    { id: 'skills', el: document.getElementById('skills'), targetNav: 'skills' },
+    { id: 'services', el: document.getElementById('services'), targetNav: 'services' },
+    { id: 'tags', el: document.getElementById('tags'), targetNav: 'services' },
+    { id: 'projects', el: document.getElementById('projects'), targetNav: 'projects' },
+    { id: 'process', el: document.getElementById('process'), targetNav: 'process' },
+    { id: 'faq', el: document.getElementById('faq'), targetNav: 'faq' },
+    { id: 'blog', el: document.getElementById('blog'), targetNav: 'faq' },
+    { id: 'contact', el: document.getElementById('contact'), targetNav: 'contact' },
+  ].filter((s) => s.el !== null);
+
+  function setActivePill(sectionId) {
+    const targetHref = `#${sectionId}`;
+    navPills.forEach((pill) => {
+      const href = pill.getAttribute('href');
+      if (href === targetHref || (!sectionId && href === '#home')) {
+        pill.classList.add('active');
+        pill.setAttribute('aria-current', 'page');
+      } else {
+        pill.classList.remove('active');
+        pill.removeAttribute('aria-current');
+      }
+    });
+
+    if (mobileNavOverlay) {
+      const mobileLinks = mobileNavOverlay.querySelectorAll('.mobile-nav-links a');
+      mobileLinks.forEach((link) => {
+        const href = link.getAttribute('href');
+        if (href === targetHref || (!sectionId && href === '#home')) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'page');
+        } else {
+          link.classList.remove('active');
+          link.removeAttribute('aria-current');
+        }
+      });
+    }
+  }
+
+  function getActiveNavId() {
+    const scrollY = window.scrollY || window.pageYOffset;
+    if (scrollY < 50) {
+      return 'home';
+    }
+
+    const vh = window.innerHeight;
+    const docHeight = document.documentElement.scrollHeight;
+    // Check if scrolled to or very near document bottom
+    if ((scrollY + vh) >= (docHeight - 15)) {
+      return 'contact';
+    }
+
+    const navBottom = navbar ? navbar.getBoundingClientRect().bottom : 80;
+    // Section destinations land around navBottom + 16px via scrollToSection.
+    // Setting threshold to navBottom + 28px provides a reliable, generous buffer.
+    const threshold = Math.round(navBottom) + 28;
+
+    // Traverse bottom-to-top.
+    // This permanently prevents negative margin tuck-in overlaps (e.g. margin-top: -32px
+    // on .projects-pin-section, .process-section, and .final-cta-section) from matching
+    // the preceding section's bottom edge and causing the active indicator to lag behind.
+    for (let i = navTrackedSections.length - 1; i >= 0; i--) {
+      const sec = navTrackedSections[i];
+      const rect = sec.el.getBoundingClientRect();
+      if (rect.top <= threshold) {
+        return sec.targetNav;
+      }
+    }
+
+    return 'home';
+  }
+
+  function updateActiveNavPill() {
+    if (isProgrammaticScroll && programmaticTarget) {
+      setActivePill(programmaticTarget);
+      return;
+    }
+
+    const activeId = getActiveNavId();
+    setActivePill(activeId);
+  }
+
   function scrollToSection(targetId) {
-    if (targetId === '#home') {
+    if (targetId === '#home' || targetId === 'home') {
       window.scrollTo({
         top: 0,
         behavior: prefersReducedMotion ? 'auto' : 'smooth'
@@ -1029,15 +1156,164 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const targetElement = document.querySelector(targetId);
+    const sel = targetId.startsWith('#') ? targetId : `#${targetId}`;
+    const targetElement = document.querySelector(sel);
     if (!targetElement) return;
 
-    const navOffset = (navbar ? navbar.offsetHeight : 70) + 16;
+    const navBottom = navbar ? navbar.getBoundingClientRect().bottom : 80;
+    const navOffset = Math.round(navBottom) + 16;
     const targetTop = targetElement.getBoundingClientRect().top + window.scrollY - navOffset;
 
     window.scrollTo({
       top: Math.max(0, Math.round(targetTop)),
       behavior: prefersReducedMotion ? 'auto' : 'smooth'
+    });
+  }
+
+  let isProgrammaticScroll = false;
+  let programmaticTarget = null;
+  let scrollSettleTimer = null;
+  let settleRafId = null;
+
+  function endProgrammaticScroll() {
+    if (scrollSettleTimer) {
+      clearTimeout(scrollSettleTimer);
+      scrollSettleTimer = null;
+    }
+    if (settleRafId) {
+      cancelAnimationFrame(settleRafId);
+      settleRafId = null;
+    }
+    isProgrammaticScroll = false;
+    programmaticTarget = null;
+    updateActiveNavPill();
+    updateNavbarTheme();
+  }
+
+  function navigateToSection(targetId) {
+    const cleanId = targetId.replace('#', '');
+    isProgrammaticScroll = true;
+    programmaticTarget = cleanId;
+
+    // Immediately highlight destination pill for instant feedback
+    setActivePill(cleanId);
+    scrollToSection(targetId);
+
+    if (history.pushState) {
+      history.pushState(null, '', `#${cleanId}`);
+    } else {
+      window.location.hash = `#${cleanId}`;
+    }
+
+    if (scrollSettleTimer) clearTimeout(scrollSettleTimer);
+    if (settleRafId) cancelAnimationFrame(settleRafId);
+
+    if (prefersReducedMotion) {
+      requestAnimationFrame(endProgrammaticScroll);
+      return;
+    }
+
+    const startTime = performance.now();
+    let lastY = window.scrollY;
+    let stableFrames = 0;
+
+    function checkSettle() {
+      if (!isProgrammaticScroll) return;
+      const now = performance.now();
+      const currentY = window.scrollY;
+
+      // Allow 150ms for smooth scroll animation to ramp up before checking stillness
+      if (now - startTime > 150) {
+        if (Math.abs(currentY - lastY) < 1.5) {
+          stableFrames++;
+          if (stableFrames >= 5) {
+            endProgrammaticScroll();
+            return;
+          }
+        } else {
+          stableFrames = 0;
+        }
+      }
+      lastY = currentY;
+      settleRafId = requestAnimationFrame(checkSettle);
+    }
+    settleRafId = requestAnimationFrame(checkSettle);
+
+    scrollSettleTimer = setTimeout(() => {
+      endProgrammaticScroll();
+    }, 1200);
+  }
+
+  window.addEventListener('scrollend', () => {
+    if (isProgrammaticScroll) {
+      endProgrammaticScroll();
+    }
+  }, { passive: true });
+
+  ['wheel', 'touchstart', 'pointerdown'].forEach((evtType) => {
+    window.addEventListener(evtType, () => {
+      if (isProgrammaticScroll) {
+        endProgrammaticScroll();
+      }
+    }, { passive: true });
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (isProgrammaticScroll && ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ', 'Tab'].includes(e.key)) {
+      endProgrammaticScroll();
+    }
+  }, { passive: true });
+
+  function handleHashNavigation() {
+    const hash = window.location.hash;
+    if (hash && hash.length > 1) {
+      const cleanId = hash.replace('#', '');
+      const mapped = navTrackedSections.find((s) => s.id === cleanId || s.targetNav === cleanId);
+      if (mapped) {
+        navigateToSection(hash);
+      }
+    } else if (hash === '' || hash === '#home') {
+      navigateToSection('#home');
+    }
+  }
+
+  window.addEventListener('popstate', handleHashNavigation);
+  window.addEventListener('hashchange', () => {
+    if (!isProgrammaticScroll) {
+      handleHashNavigation();
+    }
+  });
+
+  // Attach navigation handler to desktop nav pills
+  navPills.forEach((pill) => {
+    pill.addEventListener('click', (e) => {
+      const href = pill.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        navigateToSection(href);
+      }
+    });
+  });
+
+  const navLogo = document.querySelector('.nav-logo');
+  if (navLogo) {
+    navLogo.addEventListener('click', (e) => {
+      const href = navLogo.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        navigateToSection(href);
+      }
+    });
+  }
+
+  const navCta = document.getElementById('nav-cta');
+  if (navCta) {
+    navCta.addEventListener('click', (e) => {
+      const href = navCta.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        navigateToSection(href);
+      }
     });
   }
 
@@ -1083,16 +1359,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // 2. Perform smooth scroll in animation frame to ensure document overflow unlocked
           requestAnimationFrame(() => {
-            scrollToSection(targetId);
-
-            if (history.pushState) {
-              history.pushState(null, '', targetId);
-            } else {
-              window.location.hash = targetId;
-            }
-
-            updateActiveNavPill();
-            updateNavbarTheme();
+            navigateToSection(targetId);
           });
         } else {
           // External or mailto link
@@ -1207,47 +1474,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================
-  // 12. Active Navbar Pill Sync on Scroll
+  // 12. Active Navbar Pill Sync on Scroll (Unified Architecture)
   // ============================================================
-  const sections = ['home', 'about', 'skills', 'services', 'projects', 'process', 'faq', 'contact']
-    .map((id) => document.getElementById(id))
-    .filter(Boolean);
-
-  function updateActiveNavPill() {
-    let currentSectionId = 'home';
-    const scrollPos = window.scrollY + 160;
-
-    sections.forEach((sec) => {
-      if (sec.offsetTop <= scrollPos) {
-        currentSectionId = sec.getAttribute('id');
-      }
-    });
-
-    navPills.forEach((pill) => {
-      const href = pill.getAttribute('href');
-      if (href === `#${currentSectionId}` || (!currentSectionId && (href === '#home' || href === '#'))) {
-        pill.classList.add('active');
-        pill.setAttribute('aria-current', 'page');
-      } else {
-        pill.classList.remove('active');
-        pill.removeAttribute('aria-current');
-      }
-    });
-
-    if (mobileNavOverlay) {
-      const mobileLinks = mobileNavOverlay.querySelectorAll('.mobile-nav-links a');
-      mobileLinks.forEach((link) => {
-        const href = link.getAttribute('href');
-        if (href === `#${currentSectionId}` || (!currentSectionId && (href === '#home' || href === '#'))) {
-          link.classList.add('active');
-          link.setAttribute('aria-current', 'page');
-        } else {
-          link.classList.remove('active');
-          link.removeAttribute('aria-current');
-        }
-      });
-    }
-  }
+  // Active pill synchronization is managed by getActiveNavId() and
+  // updateActiveNavPill() in the unified Navigation Core above.
 
   // ============================================================
   // 13. Copy Email to Clipboard
@@ -1347,11 +1577,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!wrap || !canvas || !container) return;
 
     // Guaranteed visible HTML fallback:
-    // If reduced-motion is requested or screen is mobile, keep static pills visible.
+    // If reduced-motion is requested, preserve accessible static flex pills.
     const MatterLib = window.Matter || (typeof Matter !== 'undefined' ? Matter : null);
-    if (!MatterLib || prefersReducedMotion || window.innerWidth <= 640) {
+    if (!MatterLib || prefersReducedMotion) {
       return;
     }
+
+    // Mobile viewport threshold adaptation (Android / iOS / Desktop full support)
+    const isMobileViewport = window.innerWidth <= 640;
 
     // Prevent double initialization
     if (wrap.dataset.physicsInit === 'true') return;
@@ -1374,10 +1607,10 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       const engine = Engine.create({ enableSleeping: true });
-      engine.gravity.y = 0.9;
+      engine.gravity.y = isMobileViewport ? 0.95 : 0.9;
 
-      let width = wrap.clientWidth || 800;
-      let height = Math.max(380, wrap.clientHeight || 380);
+      let width = wrap.clientWidth || (isMobileViewport ? 360 : 800);
+      let height = Math.max(isMobileViewport ? 440 : 420, wrap.clientHeight || (isMobileViewport ? 440 : 420));
 
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(width * dpr);
@@ -1386,8 +1619,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (ctx) ctx.scale(dpr, dpr);
 
       // Boundaries fully enclosing the container
-      let floor = Bodies.rectangle(width / 2, height - 8, width * 3, 30, { isStatic: true, label: 'floor' });
-      let ceiling = Bodies.rectangle(width / 2, -100, width * 3, 40, { isStatic: true, label: 'ceiling' });
+      let floor = Bodies.rectangle(width / 2, height - 6, width * 3, 30, { isStatic: true, label: 'floor' });
+      let ceiling = Bodies.rectangle(width / 2, -120, width * 3, 40, { isStatic: true, label: 'ceiling' });
       let leftWall = Bodies.rectangle(-25, height / 2, 50, height * 4, { isStatic: true, label: 'leftWall' });
       let rightWall = Bodies.rectangle(width + 25, height / 2, 50, height * 4, { isStatic: true, label: 'rightWall' });
 
@@ -1398,30 +1631,37 @@ document.addEventListener('DOMContentLoaded', () => {
       if (pillEls.length === 0) return;
 
       const pillBodies = [];
+      const cols = width <= 500 ? 2 : (width <= 820 ? 3 : 3);
+      const colWidth = (width - 40) / cols;
 
       pillEls.forEach((el, i) => {
         const rect = el.getBoundingClientRect();
-        const pillW = Math.max(70, Math.round(rect.width) || 120);
-        const pillH = Math.max(34, Math.round(rect.height) || 40);
+        const pillW = Math.max(68, Math.round(rect.width) || (width <= 480 ? 98 : 126));
+        const pillH = Math.max(32, Math.round(rect.height) || (width <= 480 ? 36 : 42));
 
-        // Distribute within visible bounds so pills are immediately visible inside the card
-        const col = i % 3;
-        const row = Math.floor(i / 3);
-        const colSpacing = (width - 120) / 3;
-        const startX = 60 + col * colSpacing + (row % 2 ? 25 : -15) + (Math.random() * 20);
-        const startY = 70 + row * 65;
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        let startX = 20 + col * colWidth + (colWidth / 2) + ((Math.random() - 0.5) * 14);
+        if (pillW < width - 16) {
+          startX = Math.max(pillW / 2 + 8, Math.min(width - pillW / 2 - 8, startX));
+        } else {
+          startX = width / 2;
+        }
+        let startY = 48 + row * (width <= 480 ? 56 : 64) + ((Math.random() - 0.5) * 8);
+        startY = Math.max(pillH / 2 + 10, Math.min(height - pillH / 2 - 10, startY));
 
         const body = Bodies.rectangle(startX, startY, pillW, pillH, {
           chamfer: { radius: pillH / 2 },
-          restitution: 0.35,
-          friction: 0.25,
-          frictionAir: 0.015,
+          restitution: 0.55,
+          friction: 0.22,
+          frictionAir: 0.016,
           angle: (i % 2 === 0 ? 1 : -1) * (0.04 + (i * 0.02)),
         });
 
         body.pillEl = el;
         body.pillW = pillW;
         body.pillH = pillH;
+        body.skillName = el.getAttribute('data-skill') || '';
         pillBodies.push(body);
       });
 
@@ -1430,16 +1670,20 @@ document.addEventListener('DOMContentLoaded', () => {
       // Activate physics mode on container — real HTML pills are now positioned by physics transforms
       wrap.classList.add('has-physics');
 
-      // Pointer event handlers on real HTML pills for silky-smooth drag & throw
+      // Pointer event handlers on real HTML pills for smooth Android touch & desktop mouse
       let activeDrag = null;
 
       pillBodies.forEach((b) => {
         const el = b.pillEl;
 
-        el.addEventListener('pointerdown', (e) => {
+        const onPointerDown = (e) => {
           if (e.button !== 0 && e.pointerType === 'mouse') return;
-          e.preventDefault();
-          el.setPointerCapture(e.pointerId);
+          if (e.cancelable) e.preventDefault();
+
+          try {
+            el.setPointerCapture(e.pointerId);
+          } catch (_) {}
+
           el.classList.add('is-dragging');
 
           activeDrag = {
@@ -1455,19 +1699,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
           wakeBody(b);
           Body.setStatic(b, true);
-        });
+          if (!isRunning) {
+            isRunning = true;
+            renderFrame();
+          }
+        };
 
-        el.addEventListener('pointermove', (e) => {
+        const onPointerMove = (e) => {
           if (!activeDrag || activeDrag.pointerId !== e.pointerId) return;
-          e.preventDefault();
+          if (e.cancelable) e.preventDefault();
 
           const now = performance.now();
           const dt = Math.max(8, now - activeDrag.lastTime);
           const dx = e.clientX - activeDrag.lastX;
           const dy = e.clientY - activeDrag.lastY;
 
-          activeDrag.vx = (dx / dt) * 16;
-          activeDrag.vy = (dy / dt) * 16;
+          // Smoothed momentum tracking
+          const instVx = (dx / dt) * 16;
+          const instVy = (dy / dt) * 16;
+          activeDrag.vx = activeDrag.vx * 0.35 + instVx * 0.65;
+          activeDrag.vy = activeDrag.vy * 0.35 + instVy * 0.65;
           activeDrag.lastX = e.clientX;
           activeDrag.lastY = e.clientY;
           activeDrag.lastTime = now;
@@ -1476,18 +1727,20 @@ document.addEventListener('DOMContentLoaded', () => {
           const targetX = e.clientX - wrapRect.left;
           const targetY = e.clientY - wrapRect.top;
 
-          Body.setPosition(b, {
-            x: Math.max(b.pillW / 2, Math.min(width - b.pillW / 2, targetX)),
-            y: Math.max(b.pillH / 2, Math.min(height - b.pillH / 2, targetY)),
-          });
+          const halfW = b.pillW / 2;
+          const halfH = b.pillH / 2;
+          const clampedX = Math.max(halfW, Math.min(width - halfW, targetX));
+          const clampedY = Math.max(halfH, Math.min(height - halfH, targetY));
+
+          Body.setPosition(b, { x: clampedX, y: clampedY });
 
           // Immediate visual update during drag
-          const px = (b.position.x - b.pillW / 2).toFixed(1);
-          const py = (b.position.y - b.pillH / 2).toFixed(1);
+          const px = (clampedX - halfW).toFixed(1);
+          const py = (clampedY - halfH).toFixed(1);
           el.style.transform = `translate3d(${px}px, ${py}px, 0) rotate(${b.angle.toFixed(3)}rad)`;
 
           wakeAllBodies();
-        });
+        };
 
         const handleRelease = (e) => {
           if (!activeDrag || activeDrag.pointerId !== e.pointerId) return;
@@ -1498,22 +1751,68 @@ document.addEventListener('DOMContentLoaded', () => {
           } catch (_) {}
 
           Body.setStatic(b, false);
-          // Apply throw velocity with bounded momentum
-          const maxVel = 18;
-          const clampVx = Math.max(-maxVel, Math.min(maxVel, activeDrag.vx || 0));
-          const clampVy = Math.max(-maxVel, Math.min(maxVel, activeDrag.vy || 0));
-          Body.setVelocity(b, { x: clampVx, y: clampVy });
+
+          const timeSinceLastMove = performance.now() - activeDrag.lastTime;
+          let throwVx = timeSinceLastMove > 70 ? 0 : activeDrag.vx;
+          let throwVy = timeSinceLastMove > 70 ? 0 : activeDrag.vy;
+
+          // Apply throw velocity with bounded momentum and satisfying spin
+          const maxVel = 20;
+          throwVx = Math.max(-maxVel, Math.min(maxVel, throwVx || 0));
+          throwVy = Math.max(-maxVel, Math.min(maxVel, throwVy || 0));
+
+          Body.setVelocity(b, { x: throwVx, y: throwVy });
+          Body.setAngularVelocity(b, (throwVx * 0.015) + ((Math.random() - 0.5) * 0.02));
+
+          const px = (b.position.x - b.pillW / 2).toFixed(1);
+          const py = (b.position.y - b.pillH / 2).toFixed(1);
+          el.style.transform = `translate3d(${px}px, ${py}px, 0) rotate(${b.angle.toFixed(3)}rad)`;
 
           wakeAllBodies();
           activeDrag = null;
         };
 
-        el.addEventListener('pointerup', handleRelease);
-        el.addEventListener('pointercancel', handleRelease);
+        el.addEventListener('pointerdown', onPointerDown, { passive: false });
+        el.addEventListener('pointermove', onPointerMove, { passive: false });
+        el.addEventListener('pointerup', handleRelease, { passive: true });
+        el.addEventListener('pointercancel', handleRelease, { passive: true });
+        el.addEventListener('lostpointercapture', handleRelease, { passive: true });
       });
+
+      // Window fallback release for boundary edge-cases
+      window.addEventListener('pointerup', (e) => {
+        if (activeDrag && activeDrag.pointerId === e.pointerId) {
+          activeDrag.el.classList.remove('is-dragging');
+          Body.setStatic(activeDrag.body, false);
+          activeDrag = null;
+          wakeAllBodies();
+        }
+      }, { passive: true });
+
+      window.addEventListener('pointercancel', (e) => {
+        if (activeDrag && activeDrag.pointerId === e.pointerId) {
+          activeDrag.el.classList.remove('is-dragging');
+          Body.setStatic(activeDrag.body, false);
+          activeDrag = null;
+          wakeAllBodies();
+        }
+      }, { passive: true });
 
       let isRunning = false;
       let animId = null;
+
+      // Color palette for soft canvas contact shadows matching each 3D pill
+      const shadowColorMap = {
+        'Flutter': 'rgba(1, 117, 194, ',
+        'Dart': 'rgba(0, 168, 181, ',
+        'Riverpod': 'rgba(121, 40, 202, ',
+        'C++': 'rgba(29, 78, 216, ',
+        'Data Structures & Algorithms': 'rgba(5, 150, 105, ',
+        'Custom Canvas': 'rgba(225, 29, 72, ',
+        'SQLite': 'rgba(217, 119, 6, ',
+        'REST APIs': 'rgba(13, 148, 136, ',
+        'Git & GitHub': 'rgba(234, 88, 12, ',
+      };
 
       function renderFrame() {
         if (!isRunning) return;
@@ -1525,7 +1824,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         pillBodies.forEach((b) => {
-          // Keep pills inside visible bounds
+          // Keep pills inside visible bounds with elastic bouncing
           const halfW = b.pillW / 2;
           const halfH = b.pillH / 2;
           let clampedX = b.position.x;
@@ -1534,31 +1833,41 @@ document.addEventListener('DOMContentLoaded', () => {
           if (clampedX < halfW + 4) {
             clampedX = halfW + 4;
             Body.setPosition(b, { x: clampedX, y: clampedY });
-            Body.setVelocity(b, { x: Math.abs(b.velocity.x) * 0.4, y: b.velocity.y });
+            Body.setVelocity(b, { x: Math.abs(b.velocity.x) * 0.45, y: b.velocity.y });
           } else if (clampedX > width - halfW - 4) {
             clampedX = width - halfW - 4;
             Body.setPosition(b, { x: clampedX, y: clampedY });
-            Body.setVelocity(b, { x: -Math.abs(b.velocity.x) * 0.4, y: b.velocity.y });
+            Body.setVelocity(b, { x: -Math.abs(b.velocity.x) * 0.45, y: b.velocity.y });
           }
 
-          if (clampedY > height - halfH - 8) {
-            clampedY = height - halfH - 8;
+          if (clampedY > height - halfH - 6) {
+            clampedY = height - halfH - 6;
             Body.setPosition(b, { x: clampedX, y: clampedY });
           }
 
-          const px = (clampedX - halfW).toFixed(1);
-          const py = (clampedY - halfH).toFixed(1);
-          const rot = b.angle.toFixed(3);
-          b.pillEl.style.transform = `translate3d(${px}px, ${py}px, 0) rotate(${rot}rad)`;
+          if (clampedY < halfH + 4) {
+            clampedY = halfH + 4;
+            Body.setPosition(b, { x: clampedX, y: clampedY });
+            Body.setVelocity(b, { x: b.velocity.x, y: Math.abs(b.velocity.y) * 0.45 });
+          }
+
+          if (!activeDrag || activeDrag.body !== b) {
+            const px = (clampedX - halfW).toFixed(1);
+            const py = (clampedY - halfH).toFixed(1);
+            const rot = b.angle.toFixed(3);
+            b.pillEl.style.transform = `translate3d(${px}px, ${py}px, 0) rotate(${rot}rad)`;
+          }
 
           // Soft contact shadow rendered on canvas under each pill for depth
           if (ctx) {
-            const shadowY = Math.min(height - 6, clampedY + halfH + 2);
-            const shadowAlpha = Math.max(0, 0.12 - (shadowY - clampedY - halfH) * 0.005);
+            const shadowY = Math.min(height - 4, clampedY + halfH + 2);
+            const distFromFloor = shadowY - (clampedY + halfH);
+            const shadowAlpha = Math.max(0, 0.20 - distFromFloor * 0.005);
             if (shadowAlpha > 0.01) {
+              const colorPrefix = shadowColorMap[b.skillName] || 'rgba(46, 12, 255, ';
               ctx.beginPath();
-              ctx.ellipse(clampedX, shadowY, halfW * 0.8, 4, 0, 0, Math.PI * 2);
-              ctx.fillStyle = `rgba(46, 12, 255, ${shadowAlpha.toFixed(3)})`;
+              ctx.ellipse(clampedX, shadowY, halfW * 0.78, 4, 0, 0, Math.PI * 2);
+              ctx.fillStyle = colorPrefix + shadowAlpha.toFixed(3) + ')';
               ctx.fill();
             }
           }
@@ -1590,40 +1899,51 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           });
         },
-        { threshold: 0.1 }
+        { threshold: 0.05, rootMargin: '60px 0px' }
       );
 
       observer.observe(wrap);
 
-      // Handle window resize gracefully
-      window.addEventListener('resize', () => {
-        if (window.innerWidth <= 640) {
-          // Revert to clean static tags on mobile
-          wrap.classList.remove('has-physics');
-          pillEls.forEach((el) => (el.style.transform = ''));
-          isRunning = false;
-          if (animId) cancelAnimationFrame(animId);
-          return;
-        }
+      // Handle window resize and mobile orientation changes gracefully
+      let resizeTimer = null;
+      const handleResize = () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const newWidth = wrap.clientWidth;
+          const newHeight = Math.max(window.innerWidth <= 640 ? 440 : 420, wrap.clientHeight);
+          if (newWidth === width && newHeight === height) return;
 
-        wrap.classList.add('has-physics');
-        width = wrap.clientWidth;
-        height = Math.max(380, wrap.clientHeight);
+          width = newWidth;
+          height = newHeight;
 
-        canvas.width = Math.round(width * dpr);
-        canvas.height = Math.round(height * dpr);
-        if (ctx) ctx.scale(dpr, dpr);
+          canvas.width = Math.round(width * dpr);
+          canvas.height = Math.round(height * dpr);
+          if (ctx) ctx.scale(dpr, dpr);
 
-        Body.setPosition(floor, { x: width / 2, y: height - 8 });
-        Body.setPosition(rightWall, { x: width + 25, y: height / 2 });
-        Body.setPosition(leftWall, { x: -25, y: height / 2 });
+          Body.setPosition(floor, { x: width / 2, y: height - 6 });
+          Body.setPosition(ceiling, { x: width / 2, y: -120 });
+          Body.setPosition(leftWall, { x: -25, y: height / 2 });
+          Body.setPosition(rightWall, { x: width + 25, y: height / 2 });
 
-        wakeAllBodies();
-        if (!isRunning) {
-          isRunning = true;
-          renderFrame();
-        }
-      });
+          // Keep pills inside newly resized boundaries
+          pillBodies.forEach((b) => {
+            const halfW = b.pillW / 2;
+            const halfH = b.pillH / 2;
+            const clampedX = Math.max(halfW + 4, Math.min(width - halfW - 4, b.position.x));
+            const clampedY = Math.max(halfH + 4, Math.min(height - halfH - 6, b.position.y));
+            Body.setPosition(b, { x: clampedX, y: clampedY });
+          });
+
+          wakeAllBodies();
+          if (!isRunning) {
+            isRunning = true;
+            renderFrame();
+          }
+        }, 100);
+      };
+
+      window.addEventListener('resize', handleResize, { passive: true });
+      window.addEventListener('orientationchange', handleResize, { passive: true });
     } catch (err) {
       console.warn('Physics playground initialization bypassed, using static HTML pills:', err);
       wrap.classList.remove('has-physics');
@@ -1787,6 +2107,7 @@ document.addEventListener('DOMContentLoaded', () => {
           updateStickyCta();
           updateActiveNavPill();
           updateNavbarTheme();
+          updatePortfolioChapters();
           isTicking = false;
         });
         isTicking = true;
@@ -1806,6 +2127,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       updateGalleryMetrics();
       updateNavbarTheme();
+      updateActiveNavPill();
+      updatePortfolioChapters();
     }, 100);
   });
 
@@ -1814,8 +2137,252 @@ document.addEventListener('DOMContentLoaded', () => {
       syncNavbarMetrics();
       updateGalleryMetrics();
       updateNavbarTheme();
+      updateActiveNavPill();
+      updatePortfolioChapters();
     }, 150);
   });
+
+  // Cinematic Desktop Hero Parallax
+  function initHeroParallax() {
+    const hero = document.getElementById('home');
+    const photoWrap = document.getElementById('hero-photo-wrap');
+    if (!hero || !photoWrap) return;
+
+    const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (prefersReducedMotion || !hasFinePointer || window.innerWidth <= 1024) return;
+
+    const chips = Array.from(photoWrap.querySelectorAll('.hero-chip'));
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let isTracking = false;
+    let rafId = null;
+
+    const updateParallax = () => {
+      currentX += (targetX - currentX) * 0.08;
+      currentY += (targetY - currentY) * 0.08;
+
+      // Restrained gentle depth on portrait
+      const rotY = (currentX * 3.2).toFixed(2);
+      const rotX = (-currentY * 2.8).toFixed(2);
+      const shiftX = (currentX * 9).toFixed(2);
+      const shiftY = (currentY * 7).toFixed(2);
+      photoWrap.style.transform = `perspective(1000px) translate3d(${shiftX}px, ${shiftY}px, 0) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+
+      // Subtle counter-depth on floating metric chips
+      chips.forEach((chip) => {
+        const depth = parseFloat(chip.dataset.depth || '1');
+        const cx = (-currentX * depth * 14).toFixed(2);
+        const cy = (-currentY * depth * 11).toFixed(2);
+        chip.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+      });
+
+      if (isTracking || Math.abs(targetX - currentX) > 0.002 || Math.abs(targetY - currentY) > 0.002) {
+        rafId = requestAnimationFrame(updateParallax);
+      } else {
+        rafId = null;
+        if (!isTracking) {
+          photoWrap.style.transform = '';
+          chips.forEach((chip) => (chip.style.transform = ''));
+        }
+      }
+    };
+
+    hero.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      const rect = hero.getBoundingClientRect();
+      targetX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      targetY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+
+      isTracking = true;
+      if (!rafId) {
+        rafId = requestAnimationFrame(updateParallax);
+      }
+    });
+
+    hero.addEventListener('pointerleave', () => {
+      targetX = 0;
+      targetY = 0;
+      isTracking = false;
+      if (!rafId) {
+        rafId = requestAnimationFrame(updateParallax);
+      }
+    });
+  }
+
+  // ============================================================
+  // Phase 4: Portfolio Chapters Shelf Exploration Progress
+  // ============================================================
+  let updatePortfolioChapters = () => {};
+
+  function initPortfolioChapters() {
+    const shelf = document.getElementById('chapters');
+    if (!shelf) return;
+
+    const cards = Array.from(shelf.querySelectorAll('.chapter-card'));
+    if (!cards.length) return;
+
+    const chapters = cards.map((card) => {
+      const targetId = card.dataset.target;
+      const targetEl = document.getElementById(targetId);
+      const bar = card.querySelector('.chapter-progress-fill');
+      const val = card.querySelector('.chapter-progress-val');
+      return {
+        card,
+        targetId,
+        targetEl,
+        bar,
+        val,
+        lastPercent: -1
+      };
+    });
+
+    updatePortfolioChapters = () => {
+      const vh = window.innerHeight;
+      const scrollY = window.scrollY || window.pageYOffset;
+      const docHeight = document.documentElement.scrollHeight;
+      const isAtDocBottom = (scrollY + vh) >= (docHeight - 15);
+
+      chapters.forEach((item) => {
+        if (!item.targetEl) return;
+
+        const rect = item.targetEl.getBoundingClientRect();
+        const totalTravel = rect.height + vh;
+        const currentTravel = vh - rect.top;
+
+        let ratio = totalTravel > 0 ? currentTravel / totalTravel : 0;
+        let progress = Math.max(0, Math.min(1, ratio));
+
+        if (isAtDocBottom && item.targetId === 'contact') {
+          progress = 1;
+        }
+
+        const percent = Math.round(progress * 100);
+
+        if (percent !== item.lastPercent) {
+          item.lastPercent = percent;
+
+          if (item.bar) {
+            item.bar.style.transform = `scaleX(${progress})`;
+            item.bar.setAttribute('aria-valuenow', String(percent));
+          }
+
+          if (item.val) {
+            if (percent >= 100) {
+              item.val.textContent = '100% ✓';
+              item.card.classList.add('chapter-card--completed');
+              item.card.classList.remove('chapter-card--active');
+            } else if (percent > 0) {
+              item.val.textContent = `${percent}%`;
+              item.card.classList.add('chapter-card--active');
+              item.card.classList.remove('chapter-card--completed');
+            } else {
+              item.val.textContent = '0%';
+              item.card.classList.remove('chapter-card--active');
+              item.card.classList.remove('chapter-card--completed');
+            }
+          }
+        }
+      });
+    };
+
+    // Smooth click jump support
+    cards.forEach((card) => {
+      card.addEventListener('click', (e) => {
+        const href = card.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          e.preventDefault();
+          navigateToSection(href);
+        }
+      });
+    });
+
+    // Run initial calculation
+    updatePortfolioChapters();
+  }
+
+  // ============================================================
+  // Phase 5: Cinematic Opening Sequence
+  // ============================================================
+  function initCinematicIntro() {
+    const introEl = document.getElementById('cinematic-intro');
+    const skipBtn = document.getElementById('intro-skip-btn');
+    const heroEl = document.querySelector('.hero');
+
+    if (!introEl) {
+      if (heroEl) heroEl.classList.add('hero--ready');
+      return;
+    }
+
+    const hasSeenIntro = sessionStorage.getItem('mrh_intro_seen') === 'true';
+    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Fast-path bypass for repeat visitors or reduced motion
+    if (hasSeenIntro || isReducedMotion) {
+      introEl.classList.add('intro--finished');
+      introEl.setAttribute('aria-hidden', 'true');
+      introEl.style.display = 'none';
+      if (heroEl) heroEl.classList.add('hero--ready');
+      return;
+    }
+
+    let isDismissed = false;
+    let exitTimer = null;
+    let finishTimer = null;
+
+    const dismissIntro = (immediate = false) => {
+      if (isDismissed) return;
+      isDismissed = true;
+
+      // Remember for the rest of this session
+      try {
+        sessionStorage.setItem('mrh_intro_seen', 'true');
+      } catch {}
+
+      if (exitTimer) clearTimeout(exitTimer);
+      if (finishTimer) clearTimeout(finishTimer);
+
+      window.removeEventListener('keydown', onKeyDown);
+
+      if (immediate || isReducedMotion) {
+        introEl.classList.add('intro--finished');
+        introEl.setAttribute('aria-hidden', 'true');
+        introEl.style.display = 'none';
+        if (heroEl) heroEl.classList.add('hero--ready');
+      } else {
+        introEl.classList.add('intro--exiting');
+        if (heroEl) heroEl.classList.add('hero--ready');
+
+        finishTimer = setTimeout(() => {
+          introEl.classList.add('intro--finished');
+          introEl.setAttribute('aria-hidden', 'true');
+          introEl.style.display = 'none';
+        }, 550);
+      }
+    };
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        dismissIntro(false);
+      }
+    };
+
+    if (skipBtn) {
+      skipBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        dismissIntro(false);
+      });
+    }
+
+    window.addEventListener('keydown', onKeyDown);
+
+    // Auto-dismiss after 2.4s sequence
+    exitTimer = setTimeout(() => {
+      dismissIntro(false);
+    }, 2400);
+  }
 
   // Helper function to escape HTML
   function escapeHtml(str) {
@@ -1831,14 +2398,27 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial load & Feature activations
   syncNavbarMetrics();
   initSplitText();
-  requestAnimationFrame(() => {
-    const heroEl = document.querySelector('.hero');
-    if (heroEl) heroEl.classList.add('hero--ready');
-  });
+  initCinematicIntro();
+  initHeroParallax();
+  initPortfolioChapters();
   initSkillsPhysics();
   initTalkCursor();
   initCinematicFooter();
   updateNavbarTheme();
-  updateActiveNavPill();
+  if (window.location.hash && window.location.hash.length > 1) {
+    const initialHash = window.location.hash;
+    const cleanId = initialHash.replace('#', '');
+    const mapped = navTrackedSections.find((s) => s.id === cleanId || s.targetNav === cleanId);
+    if (mapped) {
+      setActivePill(mapped.targetNav);
+      setTimeout(() => {
+        scrollToSection(initialHash);
+      }, 120);
+    } else {
+      updateActiveNavPill();
+    }
+  } else {
+    updateActiveNavPill();
+  }
   loadPortfolio();
 });
