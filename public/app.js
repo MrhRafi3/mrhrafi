@@ -65,8 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================
-  // 1. Fetch & Render Portfolio Data
+  // 1. Fetch & Render Portfolio Data (with Resilient Offline Fallback)
   // ============================================================
+  const FALLBACK_PORTFOLIO_DATA = { projects: [{"id":"clocky","title":"Clocky","accent":".","platform":"Flutter mobile application","tagline":"Tactile Flutter timekeeping with glowing analog/digital World Clock, alarms, and precision stopwatch","category":"Horological Utility","url":"https://github.com/MrhRafi3/Clocky","githubUrl":"https://github.com/MrhRafi3/Clocky","demoUrl":null,"repoNote":"Active public repository on GitHub.","tags":["Flutter","Dart","Custom Canvas","Utility","Mobile UI"],"role":"Flutter App Developer — UI Design & Mobile Implementation","description":"A tactile Flutter timekeeping application combining a glowing analog and digital World Clock with quick multi-city timezone selection, customizable alarms, and a precision stopwatch.","overview":"Clocky blends minimal dark-mode aesthetics with responsive clock dials and precise scheduling. Engineered with custom painters, interval timers, and sub-millisecond stopwatch accuracy.","highlights":["Designed a high-contrast World Clock pairing a glowing analog dial with live digital readout and active timezone indicator (Dhaka, London, New York, Tokyo, Singapore).","Integrated searchable timezone bottom sheet and smooth alarm scheduling with flexible repeat-day toggles.","Engineered circular stopwatch with live lap tracking, audio cues, and modular responsive widgets."],"features":[{"name":"World Clock","detail":"Analog dial & digital time with multi-city timezone comparison","icon":"◷"},{"name":"Alarms & Schedules","detail":"Flexible repeat schedules, customizable sound triggers, and instant toggles","icon":"◉"},{"name":"Precision Stopwatch","detail":"Circular progress ring, recorded lap times, and sub-millisecond precision","icon":"◎"}],"coverSrc":"/images/project-covers/clocky-cover.webp","screenshotSrc":"/images/clocky/screen-1.png","screenshots":[{"src":"/images/clocky/screen-1.png","label":"World Clock","alt":"Clocky World Clock screen showing glowing analog dial, digital readout, and Dhaka timezone pill"},{"src":"/images/clocky/screen-2.png","label":"Select Timezone","alt":"Clocky Timezone selector with search input and UTC offsets for global cities"},{"src":"/images/clocky/screen-3.png","label":"Alarms","alt":"Clocky Alarm screen with scheduled alarms list and active toggles"},{"src":"/images/clocky/screen-4.png","label":"Edit Alarm","alt":"Clocky Edit Alarm modal showing time picker and repeat days selector"},{"src":"/images/clocky/screen-5.png","label":"Stopwatch","alt":"Clocky Stopwatch screen showing circular progress ring with Lap and Stop controls"}]},{"id":"expify-beta","title":"Expify Beta","accent":" Beta","badge":"BETA","platform":"Flutter mobile application","tagline":"Smart expense tracking mobile application with BDT (৳) cashflow, project budgets, and visual reports","category":"Fintech / Utility","url":"https://github.com/mrhrafi3","githubUrl":null,"demoUrl":null,"repoNote":"Expify Beta repository is being prepared and will be linked once pushed to GitHub.","tags":["Flutter","Dart","Fintech","Expense Tracking","Mobile UI"],"role":"Flutter App Developer — Architecture & UI Implementation","description":"An expense tracker mobile application built with Flutter that gives users an instant overview of their total balance in BDT (৳), income versus expenses, dedicated project budgets, and visual financial reports.","overview":"Tailored for everyday personal finance. Expify Beta provides instant transaction logging, categorical breakdown visualization, and monthly spending insights through an elegant mobile experience with offline-first persistence.","highlights":["Built clean home dashboard featuring prominent Total Balance card (BDT ৳) with live Income/Expense summaries and recent transactions.","Added dedicated Project budget tracking with spent vs. remaining progress bars and interactive donut chart in Reports.","Structured bottom navigation across Home, Projects, Reports, and Settings with category-based transaction entry and Google auth flow."],"features":[{"name":"Balance & Cashflow","detail":"Live BDT (৳) balance, income/expense breakdown, and recent transactions","icon":"◈"},{"name":"Project Budgets","detail":"Dedicated budget allocations with spent vs. remaining progress indicators","icon":"▤"},{"name":"Visual Reports","detail":"Savings rate metrics and interactive Income vs Expense donut chart","icon":"✓"}],"coverSrc":"/images/project-covers/expify-cover.webp","screenshotSrc":"/images/expify/screen-1.png","screenshots":[{"src":"/images/expify/screen-1.png","label":"Home Dashboard","alt":"Expify Beta home screen showing Total Balance of ৳9,450.00 and Income/Expense summary cards"},{"src":"/images/expify/screen-2.png","label":"Projects & Budgets","alt":"Expify Beta Projects screen showing active projects and budget progress bars"},{"src":"/images/expify/screen-3.png","label":"Financial Reports","alt":"Expify Beta Reports screen with Current Net Balance and donut chart"},{"src":"/images/expify/screen-4.png","label":"Settings","alt":"Expify Beta Settings screen showing user profile card and preferences"},{"src":"/images/expify/screen-5.png","label":"Add Transaction","alt":"Expify Beta Add Transaction screen with category icon grid"},{"src":"/images/expify/screen-6.png","label":"Project Detail","alt":"Expify Beta Food project detail view showing budget breakdown"},{"src":"/images/expify/screen-7.png","label":"Edit Profile","alt":"Expify Beta Edit Profile screen with avatar picker"},{"src":"/images/expify/screen-8.png","label":"Welcome & Sign In","alt":"Expify Beta onboarding screen highlighting Smart Taka Dashboard"}]},{"id":"nomnom","title":"NomNom","accent":".","badge":"FOOD DELIVERY","platform":"Flutter mobile application","tagline":"Contemporary food delivery and restaurant discovery mobile application built with Flutter","category":"E-Commerce / Delivery UI","url":"https://github.com/mrhrafi3","githubUrl":null,"demoUrl":null,"repoNote":"NomNom is in active development; repository and release builds will be available soon.","tags":["Flutter","Dart","E-Commerce","Cart Architecture","Live Tracking"],"role":"Flutter App Developer — Mobile UI Design & Architecture","description":"A contemporary food delivery and restaurant discovery mobile application built with Flutter. Designed with appetizing visuals, real-time menu exploration, dish customization, intuitive cart checkout, and live order tracking.","overview":"An end-to-end mobile food ordering application demo exploring interconnected user touchpoints: customer ordering, dish customization, cart checkout, and simulated live courier dispatch tracking.","highlights":["Designed engaging food discovery home feed with category pills, curated trending restaurants, and quick search filters.","Built comprehensive dish customizer sheet supporting size choices, toppings, spice levels, and real-time order subtotal calculations.","Engineered intuitive cart summary with voucher discounts and step-by-step simulated live courier dispatch tracking with 18-minute arrival countdown."],"features":[{"name":"Discover & Menus","detail":"Curated restaurant feeds, category pills, and Mirpur-6 delivery address","icon":"♨"},{"name":"Dish Customizer","detail":"Portion sizes, add-on toppings, spice levels, and live price recalculation","icon":"✦"},{"name":"Cart & Live Tracking","detail":"Voucher discounts, delivery address checkout, and live courier progress map","icon":"⚡"}],"coverSrc":"/images/project-covers/nomnom-cover.webp","screenshotSrc":"/images/NomNom/home.png","screenshots":[{"src":"/images/NomNom/splash-interface.png","label":"Splash & Brand","alt":"NomNom splash branding interface featuring the bold emblem and tagline"},{"src":"/images/NomNom/home.png","label":"Home Feed & Deals","alt":"NomNom main home feed showing delivery address in Mirpur-6 and food search bar"},{"src":"/images/NomNom/explore-menu.png","label":"Explore & Menus","alt":"NomNom explore screen showing cuisine filter tabs and dish listings"},{"src":"/images/NomNom/food.png","label":"Dish Customizer","alt":"NomNom dish customizer sheet for Fiery Crispy Chicken Royale"},{"src":"/images/NomNom/food-combo.png","label":"Feast Box Combo","alt":"NomNom feast box combo view showcasing value meals"},{"src":"/images/NomNom/cart.png","label":"Cart & Checkout","alt":"NomNom cart and checkout view with itemized order breakdown"},{"src":"/images/NomNom/order-tracking.png","label":"Live Order Tracker","alt":"NomNom live order tracking view showing estimated arrival countdown and courier map"},{"src":"/images/NomNom/offers.png","label":"Offers & Rewards","alt":"NomNom rewards and discounts screen displaying loyalty points and coupons"},{"src":"/images/NomNom/progile-settings.png","label":"Profile & Settings","alt":"NomNom profile and account settings screen for Mrh Rafi"}]},{"id":"alchemy","title":"Alchemy","accent":".","badge":"ELEMENT FUSION","platform":"Flutter mobile application","tagline":"Tactile element-combination puzzle game where players synthesize and discover new cosmic elements","category":"Mobile Application / Game","url":"https://github.com/mrhrafi3","githubUrl":null,"demoUrl":null,"repoNote":"Alchemy is in active development; repository and release builds will be available soon.","tags":["Flutter","Dart","Mobile Game","Element Fusion","Interactive UI"],"role":"Flutter App Developer — Mobile Application & Game Design","description":"An engaging element-combination game built with Flutter in which players discover new elements by combining existing ones. Features an interactive laboratory fusion chamber, discovery progression tree, and elemental collection system.","overview":"Players combine base primordial elements in a laboratory fusion chamber to unlock new discoveries, track progression across rarity tiers, and navigate an expanding constellation of synthesized elements with responsive mobile interactions.","highlights":["Engineered an interactive Laboratory Fusion Chamber allowing players to drag and combine base elements to synthesize new discoveries.","Built an expanding Discovery Tree constellation visualizing elemental synthesis pathways and unlockable recipes.","Structured an Element Collection system with rarity tiers (Common to Legendary), search filters, and player level progression."],"features":[{"name":"Fusion Chamber","detail":"Combine primordial elements to experiment and unlock newly synthesized elements","icon":"⚗️"},{"name":"Discovery Tree","detail":"Interactive constellation graph mapping element synthesis pathways","icon":"✦"},{"name":"Element Collection","detail":"Filterable catalog with rarity classifications, discovery stats, and XP progression","icon":"◈"}],"coverSrc":"/images/project-covers/alchemy-cover.webp","screenshotSrc":"/images/alchemy/home.png","screenshots":[{"src":"/images/alchemy/home.png","label":"Laboratory","alt":"Alchemy Laboratory and Fusion Chamber screen where players drag or tap elements to combine and discover new elements"},{"src":"/images/alchemy/discover.png","label":"Discovery Tree","alt":"Alchemy Discovery Tree screen showing interactive constellation of cosmic element synthesis"},{"src":"/images/alchemy/element-detail.png","label":"Element Detail","alt":"Alchemy Element Detail screen showing Energy element properties, rarity tier, and discovery XP"},{"src":"/images/alchemy/collection.png","label":"Element Collection","alt":"Alchemy Element Collection screen showing discovered primordial elements with 40% discovery progress"},{"src":"/images/alchemy/profile.png","label":"Alchemist Profile","alt":"Alchemy Alchemist Profile screen showing player level 2, XP progress bar, total discoveries, and rarity breakdown"}]},{"id":"aevique","title":"AEVIQUE","accent":".","badge":"PHOTO STUDIO","platform":"Flutter mobile application","tagline":"Refined photo-editing mobile studio with real-time lighting adjustments, portrait retouching, and preset filters","category":"Flutter Mobile App · Photo Editing","url":"https://github.com/mrhrafi3","githubUrl":null,"demoUrl":null,"repoNote":"AEVIQUE is in active development; repository and release builds will be available soon.","tags":["Flutter","Dart","Photo Editing","Image Processing","Mobile UI"],"role":"Flutter App Developer — Mobile UI Design & Photo Engine","description":"A photo-editing app focused on providing a polished editing experience and a refined visual interface.","overview":"AEVIQUE delivers an elegant, tactile photo-editing studio designed for creators. Features intuitive light parameter adjustments, geometric crop and rotate tools, granular filter and preset tuning, portrait retouching with skin glow enhancements, and high-fidelity export configurations.","highlights":["Engineered tactile Light Adjustment controls featuring Auto enhancement alongside precision Exposure, Brightness, and Contrast tuning.","Designed Crop & Rotate transform suite with rule-of-thirds grid, rotation, horizontal/vertical flipping, and standard aspect ratio presets (1:1, 4:5, 16:9).","Built comprehensive Filter & Preset system with categorized grading looks (Vivid, Dramatic, B&W) and real-time intensity blending.","Integrated specialized Portrait Retouching tools including Skin Smooth, Skin Glow, and Blemish Heal with radiant midtone preservation.","Implemented high-fidelity export pipeline supporting JPEG/PNG formats, dynamic compression quality calibration, and live rendered file size estimation."],"features":[{"name":"Lighting & Adjustments","detail":"Real-time Exposure, Brightness, Contrast sliders and one-tap Auto correction","icon":"☀️"},{"name":"Crop & Aspect Ratios","detail":"Rule-of-thirds crop handles, rotation, flipping, and social aspect presets","icon":"✂️"},{"name":"Filters & Color Grading","detail":"Curated filter collections with granular intensity percentage control","icon":"🎨"},{"name":"Portrait Retouching","detail":"Skin smoothing, blemish healing, and radiant skin tone glow sliders","icon":"✨"},{"name":"Format & Export","detail":"JPEG/PNG export, 0-100% quality scaling, and live calculated file sizes","icon":"💾"}],"coverSrc":"/images/project-covers/aevique-cover.webp","screenshotSrc":"/images/Aevique/Simulator Screenshot - iPhone 16e - 2026-10-22 at 15.18.25.png","screenshots":[{"src":"/images/Aevique/Simulator Screenshot - iPhone 16e - 2026-10-22 at 15.18.25.png","label":"Studio Home","alt":"AEVIQUE studio home screen with Open Photo and Open Camera options, recent edits canvas, and bottom navigation"},{"src":"/images/Aevique/Simulator Screenshot - iPhone 16e - 2026-10-22 at 15.08.46.png","label":"Light Adjustments","alt":"AEVIQUE Light Adjustments screen showing Exposure, Brightness, and Contrast slider controls"},{"src":"/images/Aevique/Simulator Screenshot - iPhone 16e - 2026-10-22 at 15.10.03.png","label":"Crop & Rotate","alt":"AEVIQUE Crop and Rotate screen with composition grid overlay, flip controls, and aspect ratio presets"},{"src":"/images/Aevique/Simulator Screenshot - iPhone 16e - 2026-10-22 at 15.11.53.png","label":"Filters & Presets","alt":"AEVIQUE Filters and Presets screen displaying filter category tabs, intensity slider, and preset cards"},{"src":"/images/Aevique/Simulator Screenshot - iPhone 16e - 2026-10-22 at 15.12.20.png","label":"Portrait Retouching","alt":"AEVIQUE Portrait Retouching screen showing Skin Smooth, Skin Glow, and Blemish Heal tools"},{"src":"/images/Aevique/Simulator Screenshot - iPhone 16e - 2026-10-22 at 15.12.50.png","label":"Export Photo","alt":"AEVIQUE Export Photo screen with JPEG/PNG format toggle, quality slider, and rendered size estimate"}]}] };
+
   async function loadPortfolio() {
     try {
       const res = await fetch('/api/portfolio');
@@ -77,8 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
         renderProjects(portfolioData.projects);
       }
     } catch (err) {
-      console.error('Failed to load portfolio projects:', err);
-      if (projectsCarousel) {
+      console.warn('Portfolio API unavailable, loading resilient built-in showcase data:', err);
+      if (FALLBACK_PORTFOLIO_DATA && FALLBACK_PORTFOLIO_DATA.projects) {
+        portfolioData = FALLBACK_PORTFOLIO_DATA;
+        renderProjects(portfolioData.projects);
+      } else if (projectsCarousel) {
         projectsCarousel.innerHTML = '<p class="section-subtext">Could not load projects. Please refresh.</p>';
       }
     }
@@ -558,6 +563,54 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
+
+    // Touch swipe gesture support on phone frame for fluid mobile screenshot navigation
+    const modalPhoneFrame = modalContentArea.querySelector('.modal-phone-frame');
+    if (modalPhoneFrame) {
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      modalPhoneFrame.addEventListener(
+        'touchstart',
+        (e) => {
+          if (e.touches && e.touches.length === 1) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+          }
+        },
+        { passive: true }
+      );
+
+      modalPhoneFrame.addEventListener(
+        'touchend',
+        (e) => {
+          if (!e.changedTouches || e.changedTouches.length === 0) return;
+          const diffX = e.changedTouches[0].clientX - touchStartX;
+          const diffY = e.changedTouches[0].clientY - touchStartY;
+
+          // Only trigger if horizontal swipe is intentional and exceeds vertical drag
+          if (Math.abs(diffX) > 42 && Math.abs(diffX) > Math.abs(diffY)) {
+            const screens = activeModalProject?.screenshots || [];
+            if (diffX < 0) {
+              // Swipe Left: Next screenshot, or next project if on last screenshot
+              if (activeScreenIndex < screens.length - 1) {
+                switchModalScreen(activeScreenIndex + 1);
+              } else {
+                navigateProject(1);
+              }
+            } else {
+              // Swipe Right: Previous screenshot, or previous project if on first screenshot
+              if (activeScreenIndex > 0) {
+                switchModalScreen(activeScreenIndex - 1);
+              } else {
+                navigateProject(-1);
+              }
+            }
+          }
+        },
+        { passive: true }
+      );
+    }
 
 
   }
@@ -1371,6 +1424,31 @@ document.addEventListener('DOMContentLoaded', () => {
     mobileNavOverlay.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeMobileNav({ restoreFocus: true });
+      } else if (e.key === 'Tab') {
+        // Strict circular keyboard focus trap within mobile navigation drawer
+        const focusable = Array.from(
+          mobileNavOverlay.querySelectorAll(
+            'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          )
+        ).filter((el) => {
+          return el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0;
+        });
+
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first || !mobileNavOverlay.contains(document.activeElement)) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last || !mobileNavOverlay.contains(document.activeElement)) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
       }
     });
   }
